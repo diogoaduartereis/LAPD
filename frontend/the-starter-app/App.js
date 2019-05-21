@@ -4,6 +4,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import PlantScreen from "./src/screens/PlantScreen";
+import WeatherScreen from "./src/screens/WeatherScreen";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -43,6 +44,18 @@ const AppNavigator = createStackNavigator(
           backgroundColor: colors.GREEN2
         }
       }
+    },
+
+    Weather: {
+      screen: WeatherScreen,
+      navigationOptions: {
+        title: "Weather",
+        headerTintColor: "white",
+        headerStyle: {
+          backgroundColor: colors.GREEN2
+        }
+      }
+
     }
   },
   {

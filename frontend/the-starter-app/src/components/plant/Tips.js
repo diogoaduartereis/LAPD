@@ -6,13 +6,16 @@ import colors from "../../config/colors";
 
 class Tips extends React.Component {
   render() {
+
+    const { navigation } = this.props;
+
     return (
       <View style={[styles.card, { padding: 20, paddingVertical: 30 }]}>
-        <Text style={{ fontWeight: "bold", lineHeight: 15 }}>Weather</Text>
+        <Text style={{ fontWeight: "bold", lineHeight: 15 }}>Plant Tip</Text>
 
         <View style={styles.tip_card}>
           <Image
-            source={require("../../assets/images/cloud.png")}
+            source={require("../../assets/images/idea.png")}
             style={styles.icon}
           />
 
@@ -23,18 +26,18 @@ class Tips extends React.Component {
 
         <View style={{ alignItems: "center" }}>
           <Button
-            style={[styles.waterButton, { backgroundColor: colors.BLUE }]}
+            style={[styles.waterButton, { backgroundColor: colors.YELLOW }]}
             label="KNOW MORE"
           />
         </View>
 
         <View style={[styles.line, {marginBottom:30}]} />
 
-        <Text style={{ fontWeight: "bold", lineHeight: 15 }}>Plant Tip</Text>
+        <Text style={{ fontWeight: "bold", lineHeight: 15 }}>Weather</Text>
 
         <View style={styles.tip_card}>
           <Image
-            source={require("../../assets/images/idea.png")}
+            source={require("../../assets/images/cloud.png")}
             style={styles.icon}
           />
 
@@ -46,8 +49,11 @@ class Tips extends React.Component {
 
         <View style={{ alignItems: "center" }}>
           <Button
-            style={[styles.waterButton, { backgroundColor: colors.YELLOW }]}
+            style={[styles.waterButton, { backgroundColor: colors.BLUE }]}
             label="KNOW MORE"
+            onPress={() =>
+                navigation.navigate("Weather")
+              }
           />
         </View>
       </View>

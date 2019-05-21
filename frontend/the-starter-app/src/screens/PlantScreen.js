@@ -9,10 +9,11 @@ import Status from "../components/plant/Status";
 import Tips from "../components/plant/Tips";
 
 class PlantScreen extends React.Component {
+  
   constructor(props) {
     super(props);
     this.state = {
-      percent: 10
+      data: []
     };
   }
 
@@ -27,19 +28,23 @@ class PlantScreen extends React.Component {
       backgroundColor: "white"
     }
   });
+ 
+  getData(){
+    setTimeout(() => {
+      fetch("http://localhost:3001/api/getSensor")
+      .then(data => data.json())
+      .then(res => this.setState({ data: res.data }));
+    }, 5000)
+  }
 
-  componentDidMount() {
-    let self = this;
-    this.intval = setInterval(() => {
-      let s = this.state.percent % 100;
-      s += 1;
-      self.setState({
-        percent: s
-      });
-    }, 1000 / 60);
+  componentDidMount(){
+    this.getData();
   }
 
   render() {
+
+    const { data } = this.state;
+
     return (
       <View style={styles.container}>
         <Image
@@ -59,11 +64,11 @@ class PlantScreen extends React.Component {
           </View>
 
           <View tabLabel="Readings">
-            <Readings data={this.state.percent} />
+            <Readings data={data} />
           </View>
 
           <View tabLabel="Tips">
-            <Tips />
+            <Tips navigation ={this.props.navigation}/>
           </View>
         </ScrollableTabView>
       </View>

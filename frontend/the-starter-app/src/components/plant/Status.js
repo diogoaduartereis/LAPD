@@ -31,7 +31,7 @@ class Status extends React.Component {
         <View style={[styles.card, { alignItems: "center", margin: 20 }]}>
           <Text style={{ lineHeight: 30 }}>
             <Text style={{ fontWeight: "bold" }}>Warning!{"\n"}</Text>
-            It looks like the plant needs to be watered!
+            It looks like the plant needs to be watered! 
           </Text>
 
           <Button style={styles.waterButton} label="WATER THE PLANT" />

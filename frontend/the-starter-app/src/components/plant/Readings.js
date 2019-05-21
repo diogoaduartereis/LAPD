@@ -4,7 +4,9 @@ import PercentageCircle from "react-native-percentage-circle";
 
 class Readings extends React.Component {
   render() {
-    const { data } = this.props;
+    const { temperature } = this.props.data;
+    const { humidity } = this.props.data;
+
     return (
       <View style={[styles.card, { padding: 20, paddingVertical: 30 }]}>
         <Text style={{ lineHeight: 15 }}>
@@ -12,11 +14,11 @@ class Readings extends React.Component {
         </Text>
 
         <View style={{ alignItems: "center" }}>
-          <PercentageCircle radius={60} percent={data} color={"#F2988F"}>
-            <Text style={{ fontSize: 20, color: "#F2988F" }}>{data}</Text>
+          <PercentageCircle radius={60} percent={temperature} color={"#F2988F"}>
+            <Text style={{ fontSize: 20, color: "#F2988F" }}>{temperature}</Text>
             <Text style={{ fontSize: 12, color: "#999" }}>ºC</Text>
           </PercentageCircle>
-          <Text style={{ paddingTop: 10 }}> {data}ºC</Text>
+          <Text style={{ paddingTop: 10 }}> {temperature}ºC</Text>
         </View>
 
         {/*<Progress.Bar height={9} color={colors.BLUE} progress={0.3} width={600} />*/}
@@ -26,11 +28,11 @@ class Readings extends React.Component {
         </Text>
 
         <View style={{ alignItems: "center" }}>
-          <PercentageCircle radius={60} percent={data} color={"#F2988F"}>
-            <Text style={{ fontSize: 20, color: "#F2988F" }}>{data}</Text>
+          <PercentageCircle radius={60} percent={humidity} color={"#F2988F"}>
+            <Text style={{ fontSize: 20, color: "#F2988F" }}>{humidity}</Text>
             <Text style={{ fontSize: 12, color: "#999" }}>RH</Text>
           </PercentageCircle>
-          <Text style={{ paddingTop: 10 }}> {data}RH</Text>
+          <Text style={{ paddingTop: 10 }}> {humidity}RH</Text>
         </View>
       </View>
     );
