@@ -57,7 +57,7 @@ router.get("/getSensor", (req, res) => {
   return res.json({ data: sensor1.getValues() });
 });
 
-router.post("/register", (req, res) => {
+router.get("/register", (req, res) => {
   console.log(req.body)
 });
 
