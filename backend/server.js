@@ -43,7 +43,7 @@ dataModel.connectDb().then(async() => {
 
 
 /**
- * Configure express to use body parser, so data is already trasnformed
+ * Configure express to use body parser, so data is already transformed
  * to JSON and can be used as the 'request.body' property
  */
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -55,6 +55,10 @@ app.use(bodyParser.json());
  */
 router.get("/getSensor", (req, res) => {
   return res.json({ data: sensor1.getValues() });
+});
+
+router.post("/register", (req, res) => {
+  console.log(req.body)
 });
 
 

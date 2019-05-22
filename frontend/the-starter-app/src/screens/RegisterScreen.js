@@ -36,7 +36,7 @@ class RegisterScreen extends React.Component {
   handleEmailChange = email => this.setState({ email });
   handlePasswordChange = password => this.setState({ password });
   handleUsernameChange = username => this.setState({ username });
-  handleLoginPress = () => {
+  handleRegisterPress = () => {
     console.log("Login button pressed");
   };
 
@@ -87,7 +87,7 @@ class RegisterScreen extends React.Component {
             <Button
               style={styles.loginButton}
               label={strings.REGISTER}
-              onPress={this.handleLoginPress}
+              onPress={this.handleRegisterPress}
             />
           </View>
           <TouchableOpacity
