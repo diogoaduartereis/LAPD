@@ -8,6 +8,8 @@ import WeatherScreen from "./src/screens/WeatherScreen";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
+global.SERVERIP = '94.60.211.16:3001';
+
 const AppNavigator = createStackNavigator(
   {
     Login: {

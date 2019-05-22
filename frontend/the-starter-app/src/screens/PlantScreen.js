@@ -31,7 +31,7 @@ class PlantScreen extends React.Component {
  
   getData(){
     setTimeout(() => {
-      fetch("http://localhost:3001/api/getSensor")
+      fetch("http://" + global.SERVERIP + "/api/getSensor")
       .then(data => data.json())
       .then(res => this.setState({ data: res.data }));
     }, 5000)

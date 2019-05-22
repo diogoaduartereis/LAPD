@@ -12,7 +12,6 @@ import FormTextInput from "../components/FormTextInput";
 import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
-import register from '../networking/Server';
 
 class RegisterScreen extends React.Component {
   constructor(props) {
@@ -38,11 +37,11 @@ class RegisterScreen extends React.Component {
   handlePasswordChange = password => this.setState({ password });
   handleUsernameChange = username => this.setState({ username });
   handleRegisterPress = () => {
-    register().then((response) => {
-      console.log(response);
-    }).catch((error)=> {
-      console.error("Error : " + error);
-    });
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/register")
+      .then(data => data.json())
+      .then(res => this.setState({ data: res.data }));
+    }, 5000)
   };
 
   render() {
