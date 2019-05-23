@@ -54,6 +54,7 @@ app.use(bodyParser.json());
  * Create the endpoints
  */
 router.get("/getSensor", (req, res) => {
+  console.log(res);
   return res.json({ data: sensor1.getValues() });
 });
 
