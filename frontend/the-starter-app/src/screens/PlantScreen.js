@@ -33,8 +33,10 @@ class PlantScreen extends React.Component {
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/getSensor")
       .then(data => data.json())
-      .then(res => this.setState({ data: res.data }));
-    }, 10000)
+      .then(res => {
+        this.setState({ data: res.data })
+      });
+    }, 3000)
   }
 
   componentDidMount(){
@@ -43,8 +45,7 @@ class PlantScreen extends React.Component {
 
   render() {
 
-    const { data } = this.state;
-
+    const data = this.state.data;
     return (
       <View style={styles.container}>
         <Image
@@ -55,19 +56,19 @@ class PlantScreen extends React.Component {
         <ScrollableTabView
           tabBarActiveTextColor={colors.GREEN2}
           style={{ marginTop: 10 }}
-          initialPage={0}
+          initialPage={1}
           tabBarUnderlineStyle={{ backgroundColor: colors.GREEN2, height: 3 }}
           renderTabBar={() => <DefaultTabBar />}
         >
-          <View tabLabel="Status">
+          <View key={0} tabLabel="Status">
             <Status />
           </View>
 
-          <View tabLabel="Readings">
+          <View key={1} tabLabel="Readings">
             <Readings data={data} />
           </View>
 
-          <View tabLabel="Tips">
+          <View key={2} tabLabel="Tips">
             <Tips navigation ={this.props.navigation}/>
           </View>
         </ScrollableTabView>

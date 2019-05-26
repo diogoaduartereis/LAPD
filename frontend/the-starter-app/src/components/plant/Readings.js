@@ -4,9 +4,10 @@ import PercentageCircle from "react-native-percentage-circle";
 
 class Readings extends React.Component {
   render() {
-    const { temperature } = this.props.data;
-    const { humidity } = this.props.data;
-
+    const temperature = this.props.data.temperature;
+    const humidity = this.props.data.humidity;
+    console.log(temperature);
+    console.log(humidity);
     return (
       <View style={[styles.card, { padding: 20, paddingVertical: 30 }]}>
         <Text style={{ lineHeight: 15 }}>
