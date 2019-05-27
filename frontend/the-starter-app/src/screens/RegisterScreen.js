@@ -12,13 +12,15 @@ import FormTextInput from "../components/FormTextInput";
 import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
+const Joi = require('@hapi/joi');
 
 class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      failMessage: "",
     };
   }
 
@@ -35,6 +37,17 @@ class RegisterScreen extends React.Component {
   handleUsernameChange = username => this.setState({ username });
   handlePasswordChange = password => this.setState({ password });
   handleRegisterPress = () => {
+    const schema = {
+      username: Joi.string().alphanum().min(5).max(20).required(),
+      password: Joi.string().alphanum().min(5).max(20).required()
+    };
+
+    if(Joi.validate(user, schema)) {
+      this.setState({
+        failMessage: "Username and password must have a minimum of 5 and a maximum of 20 alphanumeric characters!"
+      })
+    }
+
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/register", {
         method: 'POST',
@@ -93,6 +106,7 @@ class RegisterScreen extends React.Component {
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("Login")}
           >
+            <Text style={styles.errorMsg}>{this.state.failMessage}</Text>
             <Text style={styles.btnText}>Already have a account?</Text>
           </TouchableOpacity>
         </View>
@@ -167,6 +181,12 @@ const styles = StyleSheet.create({
 
   btnText: {
     color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+
+  errorMsg: {
+    color: "red",
     fontWeight: "bold",
     textAlign: "center"
   }
