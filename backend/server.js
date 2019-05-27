@@ -77,7 +77,7 @@ router.post('/register', async (req, res) => {
   if (user) {
       return res.status(400).send('That user already exists!');
   } else {
-    let hashedPassword = "";
+    var hashedPassword = "";
     bcrypt.genSalt(saltRounds, function(err, salt) {
       bcrypt.hash(req.body.password, salt, function(err, hash) {
         hashedPassword = hash;
