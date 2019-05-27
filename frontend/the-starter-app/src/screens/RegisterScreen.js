@@ -1,3 +1,4 @@
+const request = require('request')
 import * as React from "react";
 import {
   KeyboardAvoidingView,
@@ -18,7 +19,6 @@ class RegisterScreen extends React.Component {
     super(props);
     this.state = {
       username: "",
-      email: "",
       password: ""
     };
   }
@@ -33,14 +33,21 @@ class RegisterScreen extends React.Component {
   secondTextInput = React.createRef();
   thirdTextInput = React.createRef();
 
-  handleEmailChange = email => this.setState({ email });
-  handlePasswordChange = password => this.setState({ password });
   handleUsernameChange = username => this.setState({ username });
+  handlePasswordChange = password => this.setState({ password });
   handleRegisterPress = () => {
     setTimeout(() => {
-      fetch("http://" + global.SERVERIP + "/api/register")
-      .then(data => data.json())
-      .then(res => this.setState({ data: res.data }));
+      request.post("http://" + global.SERVERIP + "/api/register", {
+        json: {
+          username: this.state.username,
+          password: this.state.password,
+        }
+      })
+      .then(data => {
+        console.log(data);
+      }).catch(error => {
+        console.log(error);
+      });
     }, 5000)
   };
 
@@ -57,21 +64,6 @@ class RegisterScreen extends React.Component {
             returnKeyType="next"
             onSubmitEditing={() => {
               this.secondTextInput.focus();
-            }}
-            blurOnSubmit={false}
-          />
-
-          <FormTextInput
-            ref={input => {
-              this.secondTextInput = input;
-            }}
-            value={this.state.email}
-            onChangeText={this.handleEmailChange}
-            placeholder={strings.EMAIL_PLACEHOLDER}
-            returnKeyType="next"
-            keyboardType="email-address"
-            onSubmitEditing={() => {
-              this.thirdTextInput.focus();
             }}
             blurOnSubmit={false}
           />

@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
+const { User, validate } = require('../models/user');
 
 
 /**
@@ -57,8 +58,30 @@ router.get("/getSensor", (req, res) => {
   return res.json({ data: sensor1.getValues() });
 });
 
-router.get("/register", (req, res) => {
-  console.log(req.body)
+
+/**
+ * Create User
+ */
+router.post('/register', async (req, res) => {
+  // First Validate The Request
+  const { error } = validate(req.body);
+  if (error) {
+      return res.status(400).send(error.details[0].message);
+  }
+
+  // Check if this user already exists
+  let user = await User.findOne({ username: req.body.username });
+  if (user) {
+      return res.status(400).send('That user already exists!');
+  } else {
+      // Insert the new user if they do not exist yet
+      user = new User({
+          username: req.body.username,
+          password: req.body.password
+      });
+      await user.save();
+      res.send(user);
+  }
 });
 
 
