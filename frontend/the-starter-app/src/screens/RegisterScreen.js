@@ -1,4 +1,3 @@
-const request = require('request')
 import * as React from "react";
 import {
   KeyboardAvoidingView,
@@ -37,11 +36,16 @@ class RegisterScreen extends React.Component {
   handlePasswordChange = password => this.setState({ password });
   handleRegisterPress = () => {
     setTimeout(() => {
-      request.post("http://" + global.SERVERIP + "/api/register", {
-        json: {
+      fetch("http://" + global.SERVERIP + "/api/register", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           username: this.state.username,
           password: this.state.password,
-        }
+        }),
       })
       .then(data => {
         console.log(data);
