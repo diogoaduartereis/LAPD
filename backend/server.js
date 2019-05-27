@@ -98,11 +98,11 @@ router.post('/deleteUser', async (req, res) => {
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
   if (user) {
-      return res.status(400).send('That user doesnt exist!');
-  } else {
       //Delete's User
       let response = await User.deleteOne({ username: req.body.username , password: req.body.password})
       res.send(response);
+  } else {
+      return res.status(400).send('That user doesnt exist!');
   }
 });
 
