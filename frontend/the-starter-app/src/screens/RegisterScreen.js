@@ -12,7 +12,6 @@ import FormTextInput from "../components/FormTextInput";
 import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
-const Joi = require('@hapi/joi');
 
 class RegisterScreen extends React.Component {
   constructor(props) {
@@ -34,21 +33,32 @@ class RegisterScreen extends React.Component {
   secondTextInput = React.createRef();
   thirdTextInput = React.createRef();
 
+  validateLogin(min, max)
+  {
+    if(this.state.username.length < min || this.state.username.length < max) {
+      this.state.failMessage = "Username must be " + min + "to " + max + "characters long";
+      return 0;
+    }
+    else if(!this.state.username.match(/^[a-zA-Z0-9]+$/i)) {
+      this.state.failMessage = "Username must be alphanumeric";
+      return 0;
+    }
+
+    if(this.state.password.length < min || this.state.password.length < max) {
+      this.state.failMessage = "Password must be " + min + "to " + max + "characters long";
+      return 0;
+    }
+    else if(!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
+      this.state.failMessage = "Password must be alphanumeric";
+      return 0;
+    }
+  }
+
   handleUsernameChange = username => this.setState({ username });
   handlePasswordChange = password => this.setState({ password });
   handleRegisterPress = () => {
-    const schema = {
-      username: Joi.string().alphanum().min(5).max(20).required(),
-      password: Joi.string().alphanum().min(5).max(20).required()
-    };
-
-    if(Joi.validate(user, schema)) {
-      this.setState({
-        failMessage: "Username and password must have a minimum of 5 and a maximum of 20 alphanumeric characters!"
-      })
-    }
-
     setTimeout(() => {
+      if(this.validateLogin(5,20) == 0) return;
       fetch("http://" + global.SERVERIP + "/api/register", {
         method: 'POST',
         headers: {
@@ -183,13 +193,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center"
-  },
+  }, 
 
   errorMsg: {
     color: "red",
     fontWeight: "bold",
     textAlign: "center"
-  }
+  },   
 });
 
 export default RegisterScreen;
