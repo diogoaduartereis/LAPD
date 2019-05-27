@@ -60,9 +60,12 @@ router.get("/getSensor", (req, res) => {
 
 
 /**
- * Create User
+ * Create User with bcrypt
  */
 router.post('/register', async (req, res) => {
+  const bcrypt = require('bcrypt');
+  const saltRounds = 10;
+
   // First Validate The Request
   const { error } = validate(req.body);
   if (error) {
@@ -74,13 +77,19 @@ router.post('/register', async (req, res) => {
   if (user) {
       return res.status(400).send('That user already exists!');
   } else {
-      // Insert the new user if they do not exist yet
-      user = new User({
-          username: req.body.username,
-          password: req.body.password
+    let hashedPassword = "";
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+      bcrypt.hash(req.body.password, salt, function(err, hash) {
+        hashedPassword = hash;
       });
-      await user.save();
-      res.send(user);
+    });
+    // Insert the new user if they do not exist yet
+    user = new User({
+        username: req.body.username,
+        password: hashedPassword
+    });
+    await user.save();
+    res.send(user);
   }
 });
 
