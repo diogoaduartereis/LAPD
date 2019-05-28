@@ -20,7 +20,8 @@ class LoginScreen extends React.Component {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      errorMsg: "",
     };
   }
 
@@ -49,23 +50,28 @@ class LoginScreen extends React.Component {
         }),
       })
       .then(data => {
-       if(data) {
-        this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: "Home"
-                //params: { someParams: 'parameters goes here...' },
-              })
-            ]
+        console.log(data);
+        if(data.status != 200) {
+          this.setState({
+            errorMsg: data._bodyText
           })
-        );
-       }
-      }).catch(error => {
-        console.log(error);
-      });
-    }, 5000)
+        }
+        else {
+            this.props.navigation.dispatch(
+              StackActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: "Home"
+                    //params: { someParams: 'parameters goes here...' },
+                  })
+                ]
+              })
+            );
+        }}).catch(error => {
+            console.log(error);
+          });
+        }, 5000)
   };
 
   render() {
@@ -105,6 +111,7 @@ class LoginScreen extends React.Component {
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("Register")}
           >
+            <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
             <Text style={styles.btnText}>Dont have an account?</Text>
           </TouchableOpacity>
         </View>
@@ -180,7 +187,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center"
-  }
+  }, 
+
+  errorMsg: {
+    color: "red",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+  }, 
 });
 
 export default LoginScreen;
