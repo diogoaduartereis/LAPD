@@ -50,15 +50,28 @@ class LoginScreen extends React.Component {
         }),
       })
       .then(data => {
+        console.log(data);
         if(data.status != 200) {
           this.setState({
             errorMsg: data._bodyText
           })
         }
-        }).catch(error => {
-          console.log(error);
-        });
-      }, 5000)
+        else {
+            this.props.navigation.dispatch(
+              StackActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: "Home"
+                    //params: { someParams: 'parameters goes here...' },
+                  })
+                ]
+              })
+            );
+        }}).catch(error => {
+            console.log(error);
+          });
+        }, 5000)
   };
 
   render() {
