@@ -59,23 +59,6 @@ router.get("/getSensor", (req, res) => {
   return res.json({ data: sensor1.getValues() });
 });
 
-/**
- * Hashes the password and saves the user to the database
- */
-function hashAndSendRegister(req, res) {
-  const saltRounds = 10;
-	bcrypt.genSalt(saltRounds, function(err, salt) {
-		bcrypt.hash(req.body.password, salt, async function(err, hash) {
-        hashedPW = hash;
-        user = new User({
-          username: req.body.username,
-          password: hashedPW
-        });
-        await user.save();
-        res.send(user);
-		  });
-    });
-};
 
 /**
  * Create User with bcrypt
@@ -93,15 +76,23 @@ router.post('/register', async (req, res) => {
       return res.status(400).send('That user already exists!');
   } else {
     // Hash and insert the new user if they do not exist yet
-    hashAndSendRegister(req, res);
+    let hashedPW = bcrypt.hashSync(req.body.password, 10);
+	        user = new User({
+          username: req.body.username,
+          password: hashedPW
+        });
+        await user.save();
+        res.send(user);
   }
 });
 
 function compareHash(password, hash)
 {
-  return bcrypt.compare(password, hash, function(err, res) {
-    return res;
-  })
+	if(bcrypt.compareSync(password, hash)) {
+	 return true
+	} else {
+	 return false
+	}
 }
 
 /**
@@ -118,12 +109,11 @@ router.post('/login', async (req, res) => {
   let user = await User.findOne({ username: req.body.username });
   if (user) {
       if(compareHash(req.body.password, user.password)) {
-        return true;
+        return res.status(200).send('Valid Login');
       }
       else {
         return res.status(400).send('Wrong Password');
       }
-
   } else {
       return res.status(400).send('That user doesnt exist!');
   }
