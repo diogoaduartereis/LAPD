@@ -19,7 +19,7 @@ class RegisterScreen extends React.Component {
     this.state = {
       username: "",
       password: "",
-      failMessage: "",
+      errorMsg: "",
     };
   }
 
@@ -37,26 +37,26 @@ class RegisterScreen extends React.Component {
   {
     if(this.state.username.length < min || this.state.username.length > max) {
       this.setState({
-        failMessage: "Username must be " + min + " to " + max + " characters long"
+        errorMsg: "Username must be " + min + " to " + max + " characters long"
       });
       return 0;
     }
     else if(!this.state.username.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
-        failMessage: "Username must be alphanumeric"
+        errorMsg: "Username must be alphanumeric"
       })
       return 0;
     }
 
     if(this.state.password.length < min || this.state.password.length > max) {
       this.setState({
-        failMessage:"Password must be " + min + " to " + max + " characters long"
+        errorMsg:"Password must be " + min + " to " + max + " characters long"
       })
       return 0;
     }
     else if(!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
-        failMessage: "Password must be alphanumeric"
+        errorMsg: "Password must be alphanumeric"
       })
       return 0;
     }
@@ -125,7 +125,7 @@ class RegisterScreen extends React.Component {
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("Login")}
           >
-            <Text style={styles.errorMsg}>{this.state.failMessage}</Text>
+            <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
             <Text style={styles.btnText}>Already have a account?</Text>
           </TouchableOpacity>
         </View>
