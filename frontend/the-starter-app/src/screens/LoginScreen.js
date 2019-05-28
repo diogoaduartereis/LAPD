@@ -19,36 +19,53 @@ class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
+      username: "",
       password: ""
     };
   }
 
   passwordInputRef = React.createRef();
 
-  handleEmailChange = email => this.setState({ email });
+  handleUsernameChange = username => this.setState({ username });
   handlePasswordChange = password => this.setState({ password });
 
-  handleEmailSubmitPress = () => {
+  handleUsernameSubmitPress = () => {
     if (this.passwordInputRef.current) {
       this.passwordInputRef.current.focus();
     }
   };
 
   handleLoginPress = () => {
-    console.log("Login button pressed");
-
-    this.props.navigation.dispatch(
-      StackActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({
-            routeName: "Home"
-            //params: { someParams: 'parameters goes here...' },
-          })
-        ]
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/login", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.password,
+        }),
       })
-    );
+      .then(data => {
+       if(data) {
+        this.props.navigation.dispatch(
+          StackActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Home"
+                //params: { someParams: 'parameters goes here...' },
+              })
+            ]
+          })
+        );
+       }
+      }).catch(error => {
+        console.log(error);
+      });
+    }, 5000)
   };
 
   render() {
@@ -62,10 +79,10 @@ class LoginScreen extends React.Component {
 
         <View style={styles.form}>
           <FormTextInput
-            value={this.state.email}
-            onChangeText={this.handleEmailChange}
-            onSubmitEditing={this.handleEmailSubmitPress}
-            placeholder={strings.EMAIL_PLACEHOLDER}
+            value={this.state.username}
+            onChangeText={this.handleUsernameChange}
+            onSubmitEditing={this.handleUsernameSubmitPress}
+            placeholder={strings.USERNAME_PLACEHOLDER}
             returnKeyType="next"
           />
 
