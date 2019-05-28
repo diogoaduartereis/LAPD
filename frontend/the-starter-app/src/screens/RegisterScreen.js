@@ -35,30 +35,39 @@ class RegisterScreen extends React.Component {
 
   validateLogin(min, max)
   {
-    if(this.state.username.length < min || this.state.username.length < max) {
-      this.state.failMessage = "Username must be " + min + "to " + max + "characters long";
+    if(this.state.username.length < min || this.state.username.length > max) {
+      this.setState({
+        failMessage: "Username must be " + min + " to " + max + " characters long"
+      });
       return 0;
     }
     else if(!this.state.username.match(/^[a-zA-Z0-9]+$/i)) {
-      this.state.failMessage = "Username must be alphanumeric";
+      this.setState({
+        failMessage: "Username must be alphanumeric"
+      })
       return 0;
     }
 
-    if(this.state.password.length < min || this.state.password.length < max) {
-      this.state.failMessage = "Password must be " + min + "to " + max + "characters long";
+    if(this.state.password.length < min || this.state.password.length > max) {
+      this.setState({
+        failMessage:"Password must be " + min + " to " + max + " characters long"
+      })
       return 0;
     }
     else if(!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
-      this.state.failMessage = "Password must be alphanumeric";
+      this.setState({
+        failMessage: "Password must be alphanumeric"
+      })
       return 0;
     }
+    return 1
   }
 
   handleUsernameChange = username => this.setState({ username });
   handlePasswordChange = password => this.setState({ password });
   handleRegisterPress = () => {
+    if(this.validateLogin(5,20) == 0) return;
     setTimeout(() => {
-      if(this.validateLogin(5,20) == 0) return;
       fetch("http://" + global.SERVERIP + "/api/register", {
         method: 'POST',
         headers: {
@@ -198,7 +207,8 @@ const styles = StyleSheet.create({
   errorMsg: {
     color: "red",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    marginBottom: 10,
   },   
 });
 
