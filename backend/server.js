@@ -5,6 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const { User, validate } = require('./models/user');
+const bcrypt = require('bcrypt');
 
 
 /**
@@ -58,14 +59,25 @@ router.get("/getSensor", (req, res) => {
   return res.json({ data: sensor1.getValues() });
 });
 
+function hashAndSendRegister(req, res) {
+  const saltRounds = 10;
+	bcrypt.genSalt(saltRounds, function(err, salt) {
+		bcrypt.hash(req.body.password, salt, async function(err, hash) {
+			hashedPW = hash;
+ 		        user = new User({
+        		username: req.body.username,
+                        password: hashedPW
+                        });
+                        await user.save();
+                        res.send(user);
+		});
+    });
+};
 
 /**
  * Create User with bcrypt
  */
 router.post('/register', async (req, res) => {
-  const bcrypt = require('bcrypt');
-  const saltRounds = 10;
-
   // First Validate The Request
   const { error } = validate(req.body);
   if (error) {
@@ -77,19 +89,8 @@ router.post('/register', async (req, res) => {
   if (user) {
       return res.status(400).send('That user already exists!');
   } else {
-    var hashedPassword = "";
-    bcrypt.genSalt(saltRounds, function(err, salt) {
-      bcrypt.hash(req.body.password, salt, function(err, hash) {
-        hashedPassword = hash;
-      });
-    });
-    // Insert the new user if they do not exist yet
-    user = new User({
-        username: req.body.username,
-        password: hashedPassword
-    });
-    await user.save();
-    res.send(user);
+    // Hash and insert the new user if they do not exist yet
+    hashAndSendRegister(req, res);
   }
 });
 
