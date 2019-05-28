@@ -19,6 +19,7 @@ class RegisterScreen extends React.Component {
     this.state = {
       username: "",
       password: "",
+      confirmPassword: "",
       errorMsg: "",
     };
   }
@@ -39,34 +40,42 @@ class RegisterScreen extends React.Component {
       this.setState({
         errorMsg: "Username must be " + min + " to " + max + " characters long"
       });
-      return 0;
+      return false;
     }
     else if(!this.state.username.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
         errorMsg: "Username must be alphanumeric"
       })
-      return 0;
+      return false;
+    }
+
+    if(this.state.confirmPassword != this.state.password) {
+      this.setState({
+        errorMsg:"The passwords don't match"
+      })
+      return false;
     }
 
     if(this.state.password.length < min || this.state.password.length > max) {
       this.setState({
         errorMsg:"Password must be " + min + " to " + max + " characters long"
       })
-      return 0;
+      return false;
     }
     else if(!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
         errorMsg: "Password must be alphanumeric"
       })
-      return 0;
+      return false;
     }
-    return 1
+    return true
   }
 
   handleUsernameChange = username => this.setState({ username });
   handlePasswordChange = password => this.setState({ password });
+  handlePasswordConfirmChange = confirmPassword => this.setState({ confirmPassword });
   handleRegisterPress = () => {
-    if(this.validateLogin(5,20) == 0) return;
+    if(!this.validateLogin(5,20)) return;
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/register", {
         method: 'POST',
@@ -80,7 +89,19 @@ class RegisterScreen extends React.Component {
         }),
       })
       .then(data => {
-        console.log(data);
+        if(data.status == 200) {
+          this.props.navigation.dispatch(
+            StackActions.reset({
+              index: 0,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: "Home"
+                  //params: { someParams: 'parameters goes here...' },
+                })
+              ]
+            })
+          );
+        }
       }).catch(error => {
         console.log(error);
       });
@@ -111,6 +132,17 @@ class RegisterScreen extends React.Component {
             value={this.state.password}
             onChangeText={this.handlePasswordChange}
             placeholder={strings.PASSWORD_PLACEHOLDER}
+            secureTextEntry={true}
+            returnKeyType="done"
+          />
+
+          <FormTextInput
+            ref={input => {
+              this.thirdTextInput = input;
+            }}
+            value={this.state.confirmPassword}
+            onChangeText={this.handlePasswordConfirmChange}
+            placeholder={strings.CONFIRMPASSWORD_PLACEHOLDER}
             secureTextEntry={true}
             returnKeyType="done"
           />
