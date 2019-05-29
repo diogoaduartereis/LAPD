@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const Schema = mongoose.Schema;
 
 const Plant = mongoose.model('Plant', new Schema({
-    userID: {
+    username: {
         type: String,
         required: true,
     },
