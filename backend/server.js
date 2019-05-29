@@ -148,7 +148,7 @@ router.get('/myPlants', async (req, res) => {
   let user = await User.findOne({ username: req.body.username });
   if (user) {
     let plants = await Plant.find({userID: user._id})
-    console.log(plants);
+    res.send(plants);
   } else {
       return res.status(400).send('That user doesnt exist!');
   }
