@@ -8,7 +8,8 @@ import {
   Text,
   Alert
 } from "react-native";
-import { NavigationActions, StackActions } from "react-navigation";
+import * as Progress from 'react-native-progress';
+import colors from "../config/colors";
 
 global.USERNAME = '';
 
@@ -19,12 +20,25 @@ class HomeScreen extends React.Component {
       username: "",
       msg: "",
       plants: [],
+      showLoading: false,
+      refreshing: false,
     };
   }
 
   _keyExtractor = (item, index) => item._id;
 
+  handleRefresh = () => {
+    this.setState({
+      refreshing: true,
+    }, () => {
+      this.fetchPlants();
+    })
+  }
+
   deletePlant(_id) {
+    this.setState({
+      showLoading: true,
+    })
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/deletePlant", {
         method: 'POST',
@@ -33,12 +47,15 @@ class HomeScreen extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          _id: _id,
+          username: global.USERNAME,
         }),
       })
       .then(data => {
         if(data.status == 200) {
-          this.componentDidMount();
+          this.fetchPlants();
+        }
+        else {
+          alert("Failed to delete plant");
         }
       }).catch(error => {
         console.log(error);
@@ -62,85 +79,122 @@ class HomeScreen extends React.Component {
     );
   }
 
-  componentDidMount() {
-    let username = this.props.navigation.state.params.username;
-    this.setState({username: username});
-    global.USERNAME = username;
+  fetchPlants() {
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/myPlants", {
         method: 'GET',
         headers: {
-          username: username,
+          username: global.USERNAME,
         },
       }).then(data => {
         if(data.status != 200) {
           this.setState({
-            msg: "You currently don't have any plants."
+            msg: "You currently don't have any plants.",
+            showLoading: false,
+            refreshing: false,
           })
         }
         else {
           this.setState({
             plants: JSON.parse(data._bodyText),
+            showLoading: false,
+            refreshing: false,
           });
         }
+      }).catch((error) => {
+        console.log(error);
+        this.setState({
+          showLoading: false,
+          refreshing: false,
+        });
       });
     }, 3000)
   }
 
+  componentWillMount() {
+    this.setState({ showLoading: true });
+    let username = this.props.navigation.state.params.username;
+    this.setState({username: username});
+    global.USERNAME = username;
+    this.fetchPlants();
+  }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Image
-          style={styles.bgImage}
-          source={require("../assets/images/background4.png")}
-        />
+    if (this.state.showLoading === true) {
+      return (
 
-        <FlatList
-          style={{ paddingTop: 20 }}
-          contentContainerStyle={{ paddingBottom: 50 }}
-          data={this.state.plants}
-          keyExtractor={this._keyExtractor}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() =>
-                this.props.navigation.navigate("Plant", { plant: item })
-              }
-              onLongPress={() =>
-                this._onLongPressButton(item._id, item.name)
-              }
-            >
-              <Text style={styles.item}>{item.name}</Text>
-
+          <View style={styles.loadingContainer}>
               <Image
-                style={{
-                  width: 55,
-                  height: 55,
-                  margin: 10
-                }}
-                source={{ uri: item.photoPath }}
+                  style={styles.bgImage}
+                  source={require("../assets/images/background4.png")} />
+
+              <View style={{ marginTop: 200 }}>
+                  <Progress.CircleSnail size={100} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />
+              </View>
+          </View>
+      )
+  } else {
+      return (
+        <View style={styles.container}>
+          <Image
+            style={styles.bgImage}
+            source={require("../assets/images/background4.png")}
+          />
+
+          <FlatList
+            style={{ paddingTop: 20 }}
+            contentContainerStyle={{ paddingBottom: 50 }}
+            data={this.state.plants}
+            keyExtractor={this._keyExtractor}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() =>
+                  this.props.navigation.navigate("Plant", { title:item.name, plant: item })
+                }
+                onLongPress={() =>
+                  this._onLongPressButton(item._id, item.name)
+                }
+              >
+                <Text style={styles.item}>{item.name}</Text>
+
+                <Image
+                  style={{
+                    width: 55,
+                    height: 55,
+                    margin: 10
+                  }}
+                  source={{ uri: item.photoPath }}
+                />
+              </TouchableOpacity>
+            )}
+          />
+
+          <View style={styles.FABontainer}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => this.props.navigation.navigate("AddPlant")}
+              style={styles.TouchableOpacityStyle}>
+              <Image
+                source={require('../assets/images/add_.png')}
+                style={styles.FloatingButtonStyle}
               />
             </TouchableOpacity>
-          )}
-        />
-
-        <View style={styles.FABontainer}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => this.props.navigation.navigate("AddPlant")}
-            style={styles.TouchableOpacityStyle}>
-            <Image
-              source={require('../assets/images/add_.png')}
-              style={styles.FloatingButtonStyle}
-            />
-          </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center"
+  },
+
   container: {
     flex: 1
   },
