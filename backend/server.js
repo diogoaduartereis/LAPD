@@ -5,6 +5,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const bcrypt = require('bcrypt');
+const multer  = require('multer')
+const upload = multer({ dest: __dirname + 'uploads/' })
 
 
 /**
@@ -130,6 +132,15 @@ router.post('/login', async (req, res) => {
   }
 });
 
+/**
+ *  Upload plant image
+ */
+router.post('/uploadPlantImage', upload.single('file'), function (req, res, next) {
+    console.log(req.file)
+    console.log(req.body)
+
+    return res.json(req.file);
+})
 
 /**
  * Add plant
