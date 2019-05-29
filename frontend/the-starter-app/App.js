@@ -5,6 +5,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import PlantScreen from "./src/screens/PlantScreen";
 import WeatherScreen from "./src/screens/WeatherScreen";
+import AddPlant from "./src/screens/AddPlant";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -13,7 +14,7 @@ global.SERVERIP = '94.60.211.16:3001';
 const AppNavigator = createStackNavigator(
   {
     Login: {
-      screen: LoginScreen,
+      screen: AddPlant,
       navigationOptions: {
         header: null
       }

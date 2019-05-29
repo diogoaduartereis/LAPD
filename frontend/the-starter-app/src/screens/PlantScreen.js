@@ -9,7 +9,7 @@ import Status from "../components/plant/Status";
 import Tips from "../components/plant/Tips";
 
 class PlantScreen extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +28,12 @@ class PlantScreen extends React.Component {
       backgroundColor: "white"
     }
   });
- 
+
+/*When add pressed go to AddPlant*/
+  handleAddPress = () => {
+    
+  }
+
   getData(){
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/getSensor")
