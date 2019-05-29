@@ -125,11 +125,6 @@ router.post('/login', async (req, res) => {
  * Add plant
  */
 router.post('/addPlant', async (req, res) => {
-  // First Validate The Request
-  if (error) {
-      return res.status(400).send(error.details[0].message);
-  }
-
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
   if (user) {
@@ -149,11 +144,6 @@ router.post('/addPlant', async (req, res) => {
  * Get my plants
  */
 router.get('/myPlants', async (req, res) => {
-  // First Validate The Request
-  if (error) {
-      return res.status(400).send(error.details[0].message);
-  }
-
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
   if (user) {
