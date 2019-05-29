@@ -174,6 +174,28 @@ router.post('/deletePlant', async (req, res) => {
   }
 });
 
+/**
+ * TODO: Compare Passwords
+ */
+router.post('/comparePW', async (req, res) => {
+  let response = await User.findOne({ username: req.body.username})
+  if(response) {
+    if(this.compareHash(req.body.oldPassword, response.password)) {
+      bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(req.body.newpassword, salt, async function(err, hash) {
+            hashedPW = hash;
+            await User.updateOne({ username: req.body.username}, {password:hashedPW})
+            res.status(200).send('Successfully Updated Password');
+          });
+        });
+    }
+  }
+  else {
+    return res.status(400).send('Error deleting plant');
+}
+});
+
+
 // Development Testing Routes
  
 /**
