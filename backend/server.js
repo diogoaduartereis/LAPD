@@ -119,6 +119,32 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
+/**
+ * Add plant
+ */
+router.post('/addPlant', async (req, res) => {
+  // First Validate The Request
+  const { error } = validate(req.body);
+  if (error) {
+      return res.status(400).send(error.details[0].message);
+  }
+
+  // Check if this user already exists
+  let user = await User.findOne({ username: req.body.username });
+  if (user) {
+      //Delete's User
+      let response = await User.deleteOne({ username: req.body.username})
+      res.send(response);
+  } else {
+      return res.status(400).send('That user doesnt exist!');
+  }
+});
+
+
+
+// Development Testing Routes
+ 
 /**
  * TODO: Delete this
  * Delete User 
@@ -141,6 +167,26 @@ router.post('/deleteUser', async (req, res) => {
   }
 });
 
+/**
+ * TODO: Delete this
+ * Delete User 
+ */
+router.post('/getUser', async (req, res) => {
+  // First Validate The Request
+  const { error } = validate(req.body);
+  if (error) {
+      return res.status(400).send(error.details[0].message);
+  }
+
+  // Check if this user already exists
+  let user = await User.findOne({ username: req.body.username });
+  if (user) {
+      //Delete's User
+      return user;
+  } else {
+      return res.status(400).send('That user doesnt exist!');
+  }
+});
 
 // append /api for http requests
 app.use("/api", router);
