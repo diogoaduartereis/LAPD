@@ -23,25 +23,26 @@ class SettingsScreen extends React.Component {
       newPassword: "",
       confirmNewPassword: "",
       errorMsg: "",
+      succMsg: "",
     };
   }
 
   validateLogin(min, max)
   {
-    if(this.state.confirmPassword != this.state.password) {
+    if(this.state.confirmNewPassword != this.state.newPassword) {
       this.setState({
         errorMsg:"The passwords don't match"
       })
       return false;
     }
 
-    if(this.state.password.length < min || this.state.password.length > max) {
+    if(this.state.newPassword.length < min || this.state.newPassword.length > max) {
       this.setState({
         errorMsg:"Password must be " + min + " to " + max + " characters long"
       })
       return false;
     }
-    else if(!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
+    else if(!this.state.newPassword.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
         errorMsg: "Password must be alphanumeric"
       })
@@ -54,14 +55,49 @@ class SettingsScreen extends React.Component {
   handleNewPassword = newPassword => this.setState({ newPassword });
   handleConfirmNewPassword = confirmNewPassword => this.setState({ confirmNewPassword });
 
-  handleChangePassword = () =>{
-    if(!this.validateLogin(5,20))
+  fetchAndComparePasswords(username) {
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/comparePW", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          newPassword: this.state.newPassword,
+        }),
+      })
+      .then(data => {
+        return data.status;
+      }).catch(error => {
+        console.log(error);
+        return error;
+      });
+    }, 3000)
+  }
+
+  handlePressChange = () =>{
+    if(!this.validateLogin(5,20)) return;
+    else {
+      let response = fetchAndComparePasswords(global.USERNAME, this.state.newPassword);
+      if(response == 200) {
+        this.setState({
+          succMsg: "Password successfully updated",
+          errorMsg: "",
+        })
+      }
+      else {
+        this.setState({
+          errorMsg: "There was en error updating the password",
+          succMsg: "",
+        })
+      }
+    }
     return;
   }
 
   render() {
-
-
     const { navigation } = this.props;
 
     return (
@@ -91,27 +127,21 @@ class SettingsScreen extends React.Component {
       />
 
       <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
-
+      <Text style={styles.succMsg}>{this.state.errorMsg}</Text>
 
       </View>
 
       <View style={styles.buttonSection}>
       <Button
-      //Verificar a password antiga
-      //Se estiver correta verifica se as novas são iguais
-      //Se estiver certo, pedir para substituir na db
       style={styles.button}
       label="Change Password"
-      onPress={this.handleChangePassword}
+      onPress={this.handlePressChange}
       />
 
       </View>
 
       <View style={styles.buttonLogoutSection}>
       <Button
-      //Verificar a password antiga
-      //Se estiver correta verifica se as novas são iguais
-      //Se estiver certo, pedir para substituir na db
       style={styles.buttonLogout}
       label="Logout"
       onPress={() => navigation.navigate("Login")}
