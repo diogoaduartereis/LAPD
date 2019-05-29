@@ -27,6 +27,7 @@ class AddPlantScreen extends React.Component {
       plantPrecipitationMax:0,
       plantPrecipitationMin:0,
       plantSpecies: "",
+      plantSpeciesQuery: "",
       plantCommonName:"",
       plantPicture: null,
       uploading: false,
@@ -35,15 +36,15 @@ class AddPlantScreen extends React.Component {
   }
 
   handlePlantNameChange = plantName => this.setState({ plantName });
-  handlePlantSpeciesChange = plantSpecies => this.setState({ plantSpecies });
+  handlePlantSpeciesChange = plantSpeciesQuery => this.setState({ plantSpeciesQuery });
   handlePlantList = plantList => this.setState({plantList});
   handlePlantData = plantData => {
-    const {temperature_minimum, scientific_name, shade_tolerance, precipitation_minimum, precipitation_maximum} = plantData.main_species.growth
+    const {temperature_minimum, shade_tolerance, precipitation_minimum, precipitation_maximum} = plantData.main_species.growth
     let temperature_minimum_deg = null
     let precipitation_maximum_val = null
     let precipitation_minimum_val = null
     if(temperature_minimum)
-      temperature_minimum_deg = plantData.growth.temperature_minimum.deg_c
+      temperature_minimum_deg = temperature_minimum.deg_c
     if(precipitation_maximum)
       precipitation_maximum_val = precipitation_maximum.cm
     if(precipitation_minimum)
@@ -54,7 +55,7 @@ class AddPlantScreen extends React.Component {
       plantPrecipitationMax:precipitation_maximum_val,
       plantPrecipitationMin:precipitation_minimum_val,
       plantCommonName:plantData.common_name,
-      plantSpecies:scientific_name
+      plantSpecies:plantData.scientific_name
     })
   }
 
@@ -80,7 +81,7 @@ class AddPlantScreen extends React.Component {
           />
 
           <FormTextInput
-            value={this.state.plantSpecies}
+            value={this.state.plantSpeciesQuery}
             onChangeText={this.handlePlantSpeciesChange}
             placeholder="Plant species"
             returnKeyType="done"
@@ -142,14 +143,14 @@ class AddPlantScreen extends React.Component {
       }),
     })
     .then(data => {
-      console.log(data.text())
-      console.log(data.json())
       if(data.status != 200) {
         this.setState({
           errorMsg: data._bodyText,
         })
       }
+      return data.text()
     })
+    .then(res => console.log(res))
   }
 
   searchPlant = (plantID) => {
@@ -169,7 +170,6 @@ class AddPlantScreen extends React.Component {
       return data.json()
     })
     .then(json => {
-      console.log(json)
       this.handlePlantData(json)
     })
     .catch(error => {
