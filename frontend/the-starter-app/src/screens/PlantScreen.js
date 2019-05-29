@@ -40,7 +40,6 @@ class PlantScreen extends React.Component {
   }
 
   componentDidMount() {
-    console.log(global.USERNAME);
     this.getData();
   }
 

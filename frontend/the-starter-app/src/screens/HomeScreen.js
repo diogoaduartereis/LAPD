@@ -49,7 +49,7 @@ class HomeScreen extends React.Component {
           });
         }
       });
-    }, 5000)
+    }, 3000)
   }
 
   render() {

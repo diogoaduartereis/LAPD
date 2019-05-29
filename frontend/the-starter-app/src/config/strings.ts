@@ -4,7 +4,8 @@ const strings = {
   EMAIL_PLACEHOLDER: "Email",
   PASSWORD_PLACEHOLDER: "Password",
   CONFIRMPASSWORD_PLACEHOLDER: "Confirm Password",
-  USERNAME_PLACEHOLDER: "Username"
+  USERNAME_PLACEHOLDER: "Username",
+  REFRESH_PLACEHOLDER: "Refresh",
 };
 
 export default strings;
