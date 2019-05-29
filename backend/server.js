@@ -181,7 +181,7 @@ router.post('/deleteUser', async (req, res) => {
  * TODO: Delete this
  * Delete User 
  */
-router.post('/getUser', async (req, res) => {
+router.get('/getUser', async (req, res) => {
   // First Validate The Request
   const { error } = validate(req.body);
   if (error) {
