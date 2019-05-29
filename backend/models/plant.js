@@ -24,9 +24,11 @@ const Plant = mongoose.model('Plant', new Schema({
     }, 
     idealTemp: {
         type: Number,
+        required: true,
     },
     idealHumid: {
         type: Number,
+        required: true,
     },
 }));
 

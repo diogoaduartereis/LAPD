@@ -71,7 +71,7 @@ class LoginScreen extends React.Component {
         }}).catch(error => {
             console.log(error);
           });
-        }, 5000)
+        }, 3000)
   };
 
   render() {
