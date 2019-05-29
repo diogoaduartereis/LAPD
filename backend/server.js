@@ -184,7 +184,7 @@ router.post('/deleteUser', async (req, res) => {
 router.get('/getUser', async (req, res) => {
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
-  res.JSON({user: user});
+  res.json({user: user});
 });
 
 // append /api for http requests
