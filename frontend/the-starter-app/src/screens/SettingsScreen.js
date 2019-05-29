@@ -31,10 +31,10 @@ class SettingsScreen extends React.Component {
   render() {
 
 
-      const { navigation } = this.props;
+    const { navigation } = this.props;
 
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+    //  <KeyboardAvoidingView style={styles.container} behavior="padding">
 
       <View style={styles.container}>
       <Image
@@ -82,10 +82,10 @@ class SettingsScreen extends React.Component {
       label="Logout"
       onPress={() => navigation.navigate("Login")}
       />
-</View>
+      </View>
       </View>
 
-      </KeyboardAvoidingView>
+      //</KeyboardAvoidingView>
     );
   }
 }
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     opacity: 1,
-    marginBottom: "5%"
+    //  marginBottom: "5%"
   },
 
   form: {
