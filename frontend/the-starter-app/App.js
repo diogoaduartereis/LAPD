@@ -72,8 +72,7 @@ const AppNavigator = createStackNavigator(
         }
       }
 
-    }
-  },
+    },
 
   Settings: {
     screen: SettingsScreen,
@@ -85,8 +84,10 @@ const AppNavigator = createStackNavigator(
       }
     }
   }
-  {
-    initialRouteName: "Login"
+  },
+
+  { 
+    initialRouteName: "Plant"
   }
 );
 

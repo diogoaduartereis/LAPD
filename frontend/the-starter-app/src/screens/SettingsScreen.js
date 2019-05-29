@@ -17,8 +17,8 @@ class SettingsScreen extends React.Component {
           style={styles.bgImage}
           source={require("../assets/images/background4.png")}
         />
-
-    );
+        </View>
+        );
   }
 }
 
