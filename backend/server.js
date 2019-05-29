@@ -126,7 +126,6 @@ router.post('/login', async (req, res) => {
  */
 router.post('/addPlant', async (req, res) => {
   // First Validate The Request
-  const { error } = validate(req.body);
   if (error) {
       return res.status(400).send(error.details[0].message);
   }
@@ -151,7 +150,6 @@ router.post('/addPlant', async (req, res) => {
  */
 router.get('/myPlants', async (req, res) => {
   // First Validate The Request
-  const { error } = validate(req.body);
   if (error) {
       return res.status(400).send(error.details[0].message);
   }
