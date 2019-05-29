@@ -132,7 +132,7 @@ class AddPlantScreen extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username:global.USERNAME,
+        username:global.USERNAME ? global.USERNAME : "admin",
         name:this.state.plantName,
         species:this.state.plantSpecies,
         plantPrecipitationMax:this.state.plantPrecipitationMax,
