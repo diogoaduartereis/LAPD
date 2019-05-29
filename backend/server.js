@@ -172,20 +172,9 @@ router.post('/deleteUser', async (req, res) => {
  * Delete User 
  */
 router.get('/getUser', async (req, res) => {
-  // First Validate The Request
-  const { error } = validate(req.body);
-  if (error) {
-      return res.status(400).send(error.details[0].message);
-  }
-
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
-  if (user) {
-      //Delete's User
-      return user;
-  } else {
-      return res.status(400).send('That user doesnt exist!');
-  }
+  res.JSON({user: user});
 });
 
 // append /api for http requests
