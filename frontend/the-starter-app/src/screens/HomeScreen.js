@@ -10,6 +10,32 @@ import {
 import { NavigationActions, StackActions } from "react-navigation";
 
 class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+    };
+  }
+
+  componentDidMount() {
+    let username = this.props.navigation.state.params.username;
+    this.setState({username: username});
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/myPlants", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+        }),
+      }).then(data => {
+        console.log(data);
+      });
+    }, 5000)
+  }
+
   render() {
     return (
       <View style={styles.container}>

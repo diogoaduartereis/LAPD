@@ -153,7 +153,7 @@ router.post('/addPlant', async (req, res) => {
 /**
  * Get my plants
  */
-router.get('/myPlants', async (req, res) => {
+router.post('/myPlants', async (req, res) => {
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
   if (user) {
