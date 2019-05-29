@@ -12,6 +12,7 @@ import FormTextInput from "../components/FormTextInput";
 import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
+import { NavigationActions, StackActions } from "react-navigation";
 
 class RegisterScreen extends React.Component {
   constructor(props) {
