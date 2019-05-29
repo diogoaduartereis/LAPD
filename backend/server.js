@@ -13,7 +13,7 @@ const bcrypt = require('bcrypt');
 const dataModel = require("./models");
 const Data = dataModel.models.Data    //model for htu21d
 const { User, validate } = require('./models/user'); //model for the Users
-const Plant = require('./models/plant'); //model for the Plants
+const { Plant } = require('./models/plant'); //model for the Plants
 
 
 /**
