@@ -20,7 +20,7 @@ class Readings extends React.Component {
           .then(data => data.json())
           .then(res => {
             this.setState({ 
-              temperate: res.data.temperate,
+              temperature: res.data.temperature,
               humidity: res.data.humidity,
             });
           });
@@ -30,10 +30,15 @@ class Readings extends React.Component {
   componentDidMount() {
     const temperature = this.props.data.temperature;
     const humidity = this.props.data.humidity;
-    this.setState({
-      temperature: temperature,
-      humidity: humidity,
-    })
+    if(!temperature || !humidity) {
+      this.handleRefreshPress();
+    }
+    else {
+      this.setState({
+        temperature: temperature,
+        humidity: humidity,
+      })
+    }
   }
 
   render() {
