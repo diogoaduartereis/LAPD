@@ -14,11 +14,13 @@ import imageLogo from "../assets/images/logo6.png";
 import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
+import * as Progress from 'react-native-progress';
 
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading:false,
       username: "",
       password: "",
       errorMsg: "",
@@ -38,9 +40,9 @@ class LoginScreen extends React.Component {
   };
 
   handleLoginPress = () => {
-    this.setState({
-      showLoading: true,
-    })
+    
+    this.setState({ loading:true })
+
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/login", {
         method: 'POST',
@@ -54,6 +56,10 @@ class LoginScreen extends React.Component {
         }),
       })
       .then(data => {
+
+        this.setState({ loading:false })
+
+        console.log(data);
         if(data.status != 200) {
           this.setState({
             errorMsg: data._bodyText,
@@ -122,6 +128,10 @@ class LoginScreen extends React.Component {
             <Text style={styles.btnText}>Dont have an account?</Text>
           </TouchableOpacity>
         </View>
+
+        {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
+ 
+
       </KeyboardAvoidingView>
     );
   }
@@ -131,6 +141,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center"
+  },
+
+  loading:{
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
 
   loginButtonSection: {
