@@ -149,7 +149,7 @@ router.post('/addPlant', async (req, res) => {
  */
 router.get('/myPlants', async (req, res) => {
   // Check if this user already exists
-  let user = await User.findOne({ username: headers.username });
+  let user = await User.findOne({ username: req.headers.username });
   if (user) {
     let plants = await Plant.find({userID: user._id})
     res.send(plants);
