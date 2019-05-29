@@ -13,6 +13,7 @@ import { ImagePicker, Permissions } from 'expo';
 import colors from "../config/colors";
 import imageBackground from "../assets/images/background4.png";
 import placeholderImage from "../assets/images/uploadPlaceholder.png";
+import { Ionicons } from '@expo/vector-icons';
 
 class AddPlantScreen extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class AddPlantScreen extends React.Component {
   }
 
   handlePlantNameChange = plantName => this.setState({ plantName });
-  handlePlantSpecies = plantSpecies => this.setState({ plantSpecies });
+  handlePlantSpeciesChange = plantSpecies => this.setState({ plantSpecies });
 
   render() {
     let {
@@ -37,7 +38,7 @@ class AddPlantScreen extends React.Component {
         <Image style={styles.bgImage} source={imageBackground} />
 
         <TouchableOpacity activeOpacity={.5} onPress={this._takePhoto}>
-        {this._maybeRenderImage()}
+          {this._maybeRenderImage()}
         </TouchableOpacity>
 
         <View style={styles.form}>
@@ -52,11 +53,26 @@ class AddPlantScreen extends React.Component {
           <FormTextInput
             ref={this.passwordInputRef}
             value={this.state.plantSpecies}
-            onChangeText={this.handlePasswordChange}
+            onChangeText={this.handlePlantSpeciesChange}
             placeholder="Plant species"
             secureTextEntry
             returnKeyType="done"
           />
+          <Button
+            icon={
+              <Ionicons
+                name="md-search"
+                size={15}
+                color="white"
+              />
+            }
+            iconRight
+            style={styles.button}
+            label="Search species"
+            onPress={this.searchPlantsAPI}
+          />
+
+
 
           <View style={styles.buttonSection}>
             <Button
@@ -68,6 +84,44 @@ class AddPlantScreen extends React.Component {
         </View>
       </KeyboardAvoidingView>
     );
+  }
+
+  searchPlantsAPI = async () => {
+    setTimeout(() => {
+      fetch("https://trefle.io//api/plants", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer '+ TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09, 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.password,
+        }),
+      })
+      .then(data => {
+        console.log(data);
+        if(data.status != 200) {
+          this.setState({
+            errorMsg: data._bodyText
+          })
+        }
+        else {
+            this.props.navigation.dispatch(
+              StackActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: "Home",
+                    params: { username: this.state.username },
+                  })
+                ]
+              })
+            );
+        }}).catch(error => {
+            console.log(error);
+          });
+        }, 3000)
   }
 
   _takePhoto = async () => {
@@ -105,7 +159,7 @@ class AddPlantScreen extends React.Component {
 
     return (
       <Image
-        source={{uri: plantPicture}}
+        source={{ uri: plantPicture }}
         style={styles.uploadImage}
       />
     );
