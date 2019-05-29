@@ -13,7 +13,7 @@ class PlantScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
     };
   }
 
@@ -23,15 +23,9 @@ class PlantScreen extends React.Component {
         ? navigation.state.params.title
         : "Plant"
     }`,
-    headerTitleStyle: { textAlign: "center", alignSelf: "center" },
     headerStyle: {
       backgroundColor: "white"
     },
-    /*headerRight: (
-        <Icon.Button name="quote-right" backgroundColor="transparent" color="black" onPress={() => params.postComment()}>
-            <Text style={{fontSize: 15}}></Text>
-        </Icon.Button>
-      ),*/
   });
 
   getData() {
@@ -44,7 +38,7 @@ class PlantScreen extends React.Component {
     }, 3000);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.getData();
   }
 

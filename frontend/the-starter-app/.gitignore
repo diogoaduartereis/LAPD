@@ -1,6 +1,7 @@
 .gitignore
 node_modules
-.expo
-package.json
-package-lock.json
 yarn.lock
+
+# Expo
+.expo
+__generated__
