@@ -14,8 +14,6 @@ const start = () => {
  
 
 htu.on('readout-complete', (data) => {
-  console.log(data);
-  
   lastReading = data;
   
   let reading = new Data();
