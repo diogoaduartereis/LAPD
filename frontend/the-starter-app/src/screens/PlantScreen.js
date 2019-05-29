@@ -7,9 +7,9 @@ import colors from "../config/colors";
 import Readings from "../components/plant/Readings";
 import Status from "../components/plant/Status";
 import Tips from "../components/plant/Tips";
+ 
 
 class PlantScreen extends React.Component {
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -28,51 +28,52 @@ class PlantScreen extends React.Component {
       backgroundColor: "white"
     }
   });
- 
-  getData(){
+
+  getData() {
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/getSensor")
-      .then(data => data.json())
-      .then(res => {
-        this.setState({ data: res.data })
-      });
-    }, 3000)
+        .then(data => data.json())
+        .then(res => {
+          this.setState({ data: res.data });
+        });
+    }, 3000);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.getData();
   }
 
   render() {
-
     const data = this.state.data;
     return (
-      <View style={styles.container}>
-        <Image
-          style={styles.bgImage}
-          source={require("../assets/images/background4.png")}
-        />
-
-        <ScrollableTabView
-          tabBarActiveTextColor={colors.GREEN2}
-          style={{ marginTop: 10 }}
-          initialPage={1}
-          tabBarUnderlineStyle={{ backgroundColor: colors.GREEN2, height: 3 }}
-          renderTabBar={() => <DefaultTabBar />}
-        >
-          <View key={0} tabLabel="Status">
-            <Status />
-          </View>
-
-          <View key={1} tabLabel="Readings">
-            <Readings data={data} />
-          </View>
-
-          <View key={2} tabLabel="Tips">
-            <Tips navigation ={this.props.navigation}/>
-          </View>
-        </ScrollableTabView>
-      </View>
+      <ScrollableTabView    
+        initialPage={0}
+        style={{marginTop:10}}
+        tabBarUnderlineStyle={{ backgroundColor: colors.GREEN2, height: 3 }}
+        renderTabBar={() => <DefaultTabBar />}
+      >
+        <View style={styles.container} tabLabel="Status">
+          <Image
+            style={styles.bgImage}
+            source={require("../assets/images/background4.png")}
+          />
+          <Status />
+        </View>
+        <View tabLabel="Readings" style={styles.container}>
+          <Image
+            style={styles.bgImage}
+            source={require("../assets/images/background4.png")}
+          />
+          <Readings data={data} />
+        </View>
+        <View tabLabel="Tips" style={styles.container}>
+          <Image
+            style={styles.bgImage}
+            source={require("../assets/images/background4.png")}
+          />
+          <Tips navigation={this.props.navigation} />
+        </View>
+      </ScrollableTabView>
     );
   }
 }
@@ -80,8 +81,7 @@ class PlantScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+ 
   },
 
   bgImage: {

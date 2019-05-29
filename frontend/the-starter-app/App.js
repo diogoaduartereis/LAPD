@@ -5,6 +5,8 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import PlantScreen from "./src/screens/PlantScreen";
 import WeatherScreen from "./src/screens/WeatherScreen";
+import AddPlantScreen from "./src/screens/AddPlantScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -18,6 +20,18 @@ const AppNavigator = createStackNavigator(
         header: null
       }
     },
+    AddPlant: {
+      screen: AddPlantScreen,
+      navigationOptions: {
+        headerTintColor: "black",
+        title: "Add new plant",
+        headerTitleStyle: { flex: 1, textAlign: "center" },
+        headerTintColor: "white",
+        headerStyle: {
+          backgroundColor: colors.GREEN2
+        }
+      }
+    },
     Register: {
       screen: RegisterScreen,
       navigationOptions: { headerTintColor: "black" }
@@ -28,7 +42,7 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         headerTintColor: "black",
         // title: "Plant",
-        headerTitleStyle: { flex: 1, textAlign: "center" },
+        //headerTitleStyle: { flex: 1, textAlign: "center" },
         headerTintColor: "white",
         headerStyle: {
           backgroundColor: colors.GREEN2
@@ -58,9 +72,21 @@ const AppNavigator = createStackNavigator(
         }
       }
 
+    },
+
+  Settings: {
+    screen: SettingsScreen,
+    navigationOptions:{
+      title: "Settings",
+      headerTintColor: "white",
+      headerStyle: {
+        backgroundColor: colors.GREEN2
+      }
     }
+  }
   },
-  {
+
+  { 
     initialRouteName: "Login"
   }
 );

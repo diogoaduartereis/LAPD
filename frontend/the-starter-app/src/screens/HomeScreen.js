@@ -10,6 +10,32 @@ import {
 import { NavigationActions, StackActions } from "react-navigation";
 
 class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+    };
+  }
+
+  componentDidMount() {
+    let username = this.props.navigation.state.params.username;
+    this.setState({username: username});
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/myPlants", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+        }),
+      }).then(data => {
+        console.log(data);
+      });
+    }, 5000)
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -64,21 +90,16 @@ class HomeScreen extends React.Component {
           )}
         />
 
-        <View
-          style={{
-            position: "absolute",
-            bottom: 20,
-            right: 20,
-            alignSelf: "flex-end"
-          }}
-        >
-          <Image
-            source={require("../assets/images/add_.png")}
-            style={{
-              width: 55,
-              height: 55
-            }}
-          />
+        <View style={styles.FABontainer}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => this.props.navigation.navigate("AddPlant")}
+            style={styles.TouchableOpacityStyle}>
+            <Image
+              source={require('../assets/images/add_.png')}
+              style={styles.FloatingButtonStyle}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -119,6 +140,30 @@ const styles = StyleSheet.create({
     opacity: 0.97,
     flex: 1,
     alignItems: "center"
+  },
+
+  FABContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+
+  TouchableOpacityStyle: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+  },
+
+  FloatingButtonStyle: {
+    resizeMode: 'contain',
+    width: 50,
+    height: 50,
+    //backgroundColor:'black'
   }
 });
 

@@ -3,6 +3,7 @@ const strings = {
   REGISTER: "Create Account",
   EMAIL_PLACEHOLDER: "Email",
   PASSWORD_PLACEHOLDER: "Password",
+  CONFIRMPASSWORD_PLACEHOLDER: "Confirm Password",
   USERNAME_PLACEHOLDER: "Username"
 };
 
