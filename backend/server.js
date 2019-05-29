@@ -165,7 +165,7 @@ router.get('/myPlants', async (req, res) => {
  * TODO: Delete Plant
  */
 router.post('/deletePlant', async (req, res) => {
-    let response = await Plant.deleteOne({ name: req.body.name})
+    let response = await Plant.deleteOne({ username: req.body.username})
     if(response) {
       res.send(response);
     }
