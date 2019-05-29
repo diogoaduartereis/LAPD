@@ -51,6 +51,10 @@ class PlantScreen extends React.Component {
         tabBarUnderlineStyle={{ backgroundColor: colors.GREEN2, height: 3 }}
         renderTabBar={() => <DefaultTabBar />}
       >
+      <Button
+        title="Settings"
+        onPress={() => navigation.navigate("Settings")}
+      />
         <View style={styles.container} tabLabel="Status">
           <Image
             style={styles.bgImage}

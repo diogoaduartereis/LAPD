@@ -66,6 +66,7 @@ class SettingsScreen extends React.Component {
         body: JSON.stringify({
           username: username,
           newPassword: this.state.newPassword,
+          oldPassword: this.state.oldPassword,
         }),
       })
       .then(data => {
