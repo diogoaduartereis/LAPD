@@ -42,7 +42,7 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         headerTintColor: "black",
         // title: "Plant",
-        //headerTitleStyle: { flex: 1, textAlign: "center" },
+        headerTitleStyle: { flex: 1, textAlign: "center" },
         headerTintColor: "white",
         headerStyle: {
           backgroundColor: colors.GREEN2
@@ -74,20 +74,23 @@ const AppNavigator = createStackNavigator(
 
     },
 
+
   Settings: {
     screen: SettingsScreen,
-    navigationOptions:{
+    navigationOptions: {
+      headerTintColor: "black",
       title: "Settings",
+      headerTitleStyle: { flex: 1, textAlign: "center" },
       headerTintColor: "white",
       headerStyle: {
         backgroundColor: colors.GREEN2
       }
     }
   }
-  },
+}  ,
 
-  { 
-    initialRouteName: "Login"
+  {
+    initialRouteName: "Settings"
   }
 );
 
