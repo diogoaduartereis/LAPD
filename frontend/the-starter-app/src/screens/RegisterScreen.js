@@ -13,11 +13,14 @@ import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
 import { NavigationActions, StackActions } from "react-navigation";
+import * as Progress from 'react-native-progress';
+
 
 class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading:false,
       username: "",
       password: "",
       confirmPassword: "",
@@ -76,7 +79,9 @@ class RegisterScreen extends React.Component {
   handlePasswordChange = password => this.setState({ password });
   handlePasswordConfirmChange = confirmPassword => this.setState({ confirmPassword });
   handleRegisterPress = () => {
+
     if(!this.validateLogin(5,20)) return;
+    this.setState({ loading:true })
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/register", {
         method: 'POST',
@@ -90,6 +95,9 @@ class RegisterScreen extends React.Component {
         }),
       })
       .then(data => {
+        
+        this.setState({ loading:false })
+
         if(data.status == 200) {
           this.props.navigation.dispatch(
             StackActions.reset({
@@ -128,13 +136,16 @@ class RegisterScreen extends React.Component {
 
           <FormTextInput
             ref={input => {
-              this.thirdTextInput = input;
+              this.secondTextInput = input;  
             }}
             value={this.state.password}
             onChangeText={this.handlePasswordChange}
             placeholder={strings.PASSWORD_PLACEHOLDER}
             secureTextEntry={true}
-            returnKeyType="done"
+            onSubmitEditing={() => {
+              this.thirdTextInput.focus();
+            }} 
+            returnKeyType="next"
           />
 
           <FormTextInput
@@ -162,6 +173,9 @@ class RegisterScreen extends React.Component {
             <Text style={styles.btnText}>Already have a account?</Text>
           </TouchableOpacity>
         </View>
+
+        {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
+ 
       </KeyboardAvoidingView>
     );
   }
@@ -171,6 +185,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center"
+  },
+  loading:{
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
 
   loginButtonSection: {
