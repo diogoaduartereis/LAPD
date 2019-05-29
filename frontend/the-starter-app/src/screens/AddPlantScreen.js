@@ -36,11 +36,8 @@ class AddPlantScreen extends React.Component {
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Image style={styles.bgImage} source={imageBackground} />
 
-        <TouchableOpacity activeOpacity = { .5 } onPress={ this._takePhoto }>
-        <Image
-          source={placeholderImage}
-          style={styles.uploadImage}
-        />
+        <TouchableOpacity activeOpacity={.5} onPress={this._takePhoto}>
+        {this._maybeRenderImage()}
         </TouchableOpacity>
 
         <View style={styles.form}>
@@ -73,83 +70,94 @@ class AddPlantScreen extends React.Component {
     );
   }
 
-_takePhoto = async () => {
-  console.log("inside take photo");
-  const {
-    status: cameraPerm
-  } = await Permissions.askAsync(Permissions.CAMERA);
+  _takePhoto = async () => {
+    console.log("inside take photo");
+    const {
+      status: cameraPerm
+    } = await Permissions.askAsync(Permissions.CAMERA);
 
-  const {
-    status: cameraRollPerm
-  } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const {
+      status: cameraRollPerm
+    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-  // only if user allows permission to camera AND camera roll
-  if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
-    let pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
+    // only if user allows permission to camera AND camera roll
+    if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
+      let pickerResult = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+      });
 
-    this._handleImagePicked(pickerResult);
-  }
-};
+      this._handleImagePicked(pickerResult);
+    }
+  };
 
-_pickImage = async () => {
-  const {
-    status: cameraRollPerm
-  } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  _maybeRenderImage = () => {
+    let {
+      plantPicture
+    } = this.state;
 
-  // only if user allows permission to camera roll
-  if (cameraRollPerm === 'granted') {
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
+    if (!plantPicture) {
+      return (<Image
+        source={placeholderImage}
+        style={styles.uploadImage}
+      />);
+    }
 
-    this._handleImagePicked(pickerResult);
-  }
-};
+    return (
+      <Image
+        source={{uri: plantPicture}}
+        style={styles.uploadImage}
+      />
+    );
+  };
 
-_handleImagePicked = async pickerResult => {
-  let uploadResponse, uploadResult;
+  _pickImage = async () => {
+    const {
+      status: cameraRollPerm
+    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-  try {
-    this.setState({
-      uploading: true
-    });
+    // only if user allows permission to camera roll
+    if (cameraRollPerm === 'granted') {
+      let pickerResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+      });
 
-    if (!pickerResult.cancelled) {
-      uploadResponse = await uploadImageAsync(pickerResult.uri);
-      uploadResult = await uploadResponse.json();
+      this._handleImagePicked(pickerResult);
+    }
+  };
 
+  _handleImagePicked = async pickerResult => {
+    let uploadResponse, uploadResult;
+
+    try {
       this.setState({
-        plantPicture: uploadResult.location
+        uploading: true
+      });
+
+      if (!pickerResult.cancelled) {
+        uploadResponse = await uploadImageAsync(pickerResult.uri);
+        uploadResult = await uploadResponse.json();
+
+        this.setState({
+          plantPicture: uploadResult.location
+        });
+      }
+    } catch (e) {
+      console.log({ uploadResponse });
+      console.log({ uploadResult });
+      console.log({ e });
+      alert('Upload failed, sorry :(');
+    } finally {
+      this.setState({
+        uploading: false
       });
     }
-  } catch (e) {
-    console.log({ uploadResponse });
-    console.log({ uploadResult });
-    console.log({ e });
-    alert('Upload failed, sorry :(');
-  } finally {
-    this.setState({
-      uploading: false
-    });
-  }
-};
+  };
 }
 
 async function uploadImageAsync(uri) {
   let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
-
-  // Note:
-  // Uncomment this if you want to experiment with local server
-  //
-  // if (Constants.isDevice) {
-  //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
-  // } else {
-  //   apiUrl = `http://localhost:3000/upload`
-  // }
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
@@ -215,11 +223,11 @@ const styles = StyleSheet.create({
     opacity: 0.4
   },
 
-  uploadImage: { 
-    width: 150, 
-    height: 150, 
-    borderRadius: 75, 
-    marginTop: 20 
+  uploadImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginTop: 20
   },
 
   item: {
