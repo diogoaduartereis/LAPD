@@ -12,6 +12,7 @@ import { NavigationActions, StackActions } from "react-navigation";
 import FormTextInput from "../components/FormTextInput";
 import Button from "../components/Button";
 import colors from "../config/colors";
+import createStackNavigator from "react-navigation";
 
 class SettingsScreen extends React.Component {
 
@@ -25,11 +26,15 @@ class SettingsScreen extends React.Component {
   }
 
   handleNewPassword = newPassword => this.setState({ newPassword });
-  handleNewPassword = confirmNewPassword => this.setState({ confirmNewPassword });
+  handleConfirmNewPassword = confirmNewPassword => this.setState({ confirmNewPassword });
 
   render() {
+
+
+    const { navigation } = this.props;
+
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+    //  <KeyboardAvoidingView style={styles.container} behavior="padding">
 
       <View style={styles.container}>
       <Image
@@ -75,12 +80,12 @@ class SettingsScreen extends React.Component {
       //Se estiver certo, pedir para substituir na db
       style={styles.buttonLogout}
       label="Logout"
-      //onPress={this.handleAddPress}
+      onPress={() => navigation.navigate("Login")}
       />
-</View>
+      </View>
       </View>
 
-      </KeyboardAvoidingView>
+      //</KeyboardAvoidingView>
     );
   }
 }
@@ -142,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     opacity: 1,
-    marginBottom: "5%"
+    //  marginBottom: "5%"
   },
 
   form: {
