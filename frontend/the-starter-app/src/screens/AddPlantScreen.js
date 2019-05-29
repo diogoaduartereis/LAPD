@@ -13,7 +13,7 @@ import ScrollableTabView, {
 } from "react-native-scrollable-tab-view";
 import colors from "../config/colors";
 
-class AddPlant extends React.Component {
+class AddPlantScreen extends React.Component {
 
 
 //Estou com erro no super(props)
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AddPlant;
+export default AddPlantScreen;

@@ -67,7 +67,7 @@ class HomeScreen extends React.Component {
         <View style={styles.FABontainer}>
           <TouchableOpacity
             activeOpacity={0.7}
-            //onPress={this.props.navigation.navigate("Plant", { title: item.key })}
+            onPress={() => this.props.navigation.navigate("AddPlant")}
             style={styles.TouchableOpacityStyle}>
             <Image
               source={require('../assets/images/add_.png')}

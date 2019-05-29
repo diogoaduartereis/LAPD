@@ -5,7 +5,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import PlantScreen from "./src/screens/PlantScreen";
 import WeatherScreen from "./src/screens/WeatherScreen";
-import AddPlant from "./src/screens/AddPlant";
+import AddPlantScreen from "./src/screens/AddPlantScreen";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -14,9 +14,21 @@ global.SERVERIP = '94.60.211.16:3001';
 const AppNavigator = createStackNavigator(
   {
     Login: {
-      screen: AddPlant,
+      screen: LoginScreen,
       navigationOptions: {
         header: null
+      }
+    },
+    AddPlant: {
+      screen: AddPlantScreen,
+      navigationOptions: {
+        headerTintColor: "black",
+        title: "Add new plant",
+        headerTitleStyle: { flex: 1, textAlign: "center" },
+        headerTintColor: "white",
+        headerStyle: {
+          backgroundColor: colors.GREEN2
+        }
       }
     },
     Register: {
