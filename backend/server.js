@@ -167,9 +167,9 @@ router.get('/myPlants', async (req, res) => {
   }
 
   // Check if this user already exists
-  let user = await User.find({ username: req.body.username });
+  let user = await User.findOne({ username: req.body.username });
   if (user) {
-    let plants = await Plant.findAll({userID: user._id})
+    let plants = await Plant.find({userID: user._id})
     console.log(plants);
   } else {
       return res.status(400).send('That user doesnt exist!');
