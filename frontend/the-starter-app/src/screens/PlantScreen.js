@@ -7,7 +7,7 @@ import colors from "../config/colors";
 import Readings from "../components/plant/Readings";
 import Status from "../components/plant/Status";
 import Tips from "../components/plant/Tips";
- 
+
 
 class PlantScreen extends React.Component {
   constructor(props) {
@@ -26,7 +26,12 @@ class PlantScreen extends React.Component {
     headerTitleStyle: { textAlign: "center", alignSelf: "center" },
     headerStyle: {
       backgroundColor: "white"
-    }
+    },
+    /*headerRight: (
+        <Icon.Button name="quote-right" backgroundColor="transparent" color="black" onPress={() => params.postComment()}>
+            <Text style={{fontSize: 15}}></Text>
+        </Icon.Button>
+      ),*/
   });
 
   getData() {
@@ -46,7 +51,7 @@ class PlantScreen extends React.Component {
   render() {
     const data = this.state.data;
     return (
-      <ScrollableTabView    
+      <ScrollableTabView
         initialPage={0}
         style={{marginTop:10}}
         tabBarUnderlineStyle={{ backgroundColor: colors.GREEN2, height: 3 }}
@@ -81,7 +86,7 @@ class PlantScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
- 
+
   },
 
   bgImage: {

@@ -5,7 +5,8 @@ import {
   Image,
   StyleSheet,
   View,
-  Text
+  Text,
+  Alert
 } from "react-native";
 import { NavigationActions, StackActions } from "react-navigation";
 
@@ -23,20 +24,54 @@ class HomeScreen extends React.Component {
 
   _keyExtractor = (item, index) => item._id;
 
-  componentDidMount() {
-    let username = this.props.navigation.state.params.username;
-    this.setState({username: username});
-    global.USERNAME = username;
+  deletePlant(_id) {
     setTimeout(() => {
-      fetch("http://" + global.SERVERIP + "/api/myPlants", {
+      fetch("http://" + global.SERVERIP + "/api/deletePlant", {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: username,
+          _id: _id,
         }),
+      })
+      .then(data => {
+        if(data.status == 200) {
+          this.componentDidMount();
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+    }, 3000)
+  }
+
+  _onLongPressButton(_id, name) {
+    Alert.alert(
+      'Delete ' + name,
+      'Are you sure you want to delete this plant?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => this.deletePlant(_id)},
+      ],
+      {cancelable: false},
+    );
+  }
+
+  componentDidMount() {
+    let username = this.props.navigation.state.params.username;
+    this.setState({username: username});
+    global.USERNAME = username;
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/myPlants", {
+        method: 'GET',
+        headers: {
+          username: username,
+        },
       }).then(data => {
         if(data.status != 200) {
           this.setState({
@@ -70,6 +105,9 @@ class HomeScreen extends React.Component {
               style={styles.card}
               onPress={() =>
                 this.props.navigation.navigate("Plant", { plant: item })
+              }
+              onLongPress={() =>
+                this._onLongPressButton(item._id, item.name)
               }
             >
               <Text style={styles.item}>{item.name}</Text>
