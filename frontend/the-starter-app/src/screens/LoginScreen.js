@@ -22,6 +22,7 @@ class LoginScreen extends React.Component {
       username: "",
       password: "",
       errorMsg: "",
+      showLoading: false,
     };
   }
 
@@ -37,6 +38,9 @@ class LoginScreen extends React.Component {
   };
 
   handleLoginPress = () => {
+    this.setState({
+      showLoading: true,
+    })
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/login", {
         method: 'POST',
@@ -50,10 +54,10 @@ class LoginScreen extends React.Component {
         }),
       })
       .then(data => {
-        console.log(data);
         if(data.status != 200) {
           this.setState({
-            errorMsg: data._bodyText
+            errorMsg: data._bodyText,
+            showLoading: false,
           })
         }
         else {
@@ -69,6 +73,9 @@ class LoginScreen extends React.Component {
               })
             );
         }}).catch(error => {
+            this.setState({
+              showLoading: false,
+            })
             console.log(error);
           });
         }, 3000)

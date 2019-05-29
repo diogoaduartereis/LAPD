@@ -84,7 +84,8 @@ class HomeScreen extends React.Component {
       }).then(data => {
         if(data.status != 200) {
           this.setState({
-            msg: "You currently don't have any plants."
+            msg: "You currently don't have any plants.",
+            showLoading: false,
           })
         }
         else {
@@ -128,7 +129,7 @@ class HomeScreen extends React.Component {
               <TouchableOpacity
                 style={styles.card}
                 onPress={() =>
-                  this.props.navigation.navigate("Plant", { plant: item })
+                  this.props.navigation.navigate("Plant", { title:item.name, plant: item })
                 }
                 onLongPress={() =>
                   this._onLongPressButton(item._id, item.name)
