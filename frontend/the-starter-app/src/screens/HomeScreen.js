@@ -9,7 +9,49 @@ import {
 } from "react-native";
 import { NavigationActions, StackActions } from "react-navigation";
 
+global.USERNAME = '';
+
 class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      msg: "",
+      plants: [],
+    };
+  }
+
+  _keyExtractor = (item, index) => item._id;
+
+  componentDidMount() {
+    let username = this.props.navigation.state.params.username;
+    this.setState({username: username});
+    global.USERNAME = username;
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/myPlants", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+        }),
+      }).then(data => {
+        if(data.status != 200) {
+          this.setState({
+            msg: "You currently don't have any plants."
+          })
+        }
+        else {
+          this.setState({
+            plants: JSON.parse(data._bodyText),
+          });
+        }
+      });
+    }, 5000)
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -21,36 +63,16 @@ class HomeScreen extends React.Component {
         <FlatList
           style={{ paddingTop: 20 }}
           contentContainerStyle={{ paddingBottom: 50 }}
-          data={[
-            {
-              key: "Ficus Benjamina",
-              src:
-                "https://mashtalegypt.com/wp-content/uploads/2017/05/update-1.png"
-            },
-            {
-              key: "Spathiphyllum Wallisii",
-              src:
-                "https://images-na.ssl-images-amazon.com/images/I/411sdVaQHYL._SY355_.jpg"
-            },
-            {
-              key: "Epipremnum Aureum",
-              src:
-                "https://cdn.shopify.com/s/files/1/1706/1307/products/Epipremnum-aureum-Golden-Pothos-40cm_600x.jpg?v=1552147263"
-            },
-            {
-              key: "Ficus Pumila",
-              src:
-                "https://smhttp-ssl-52271.nexcesscdn.net/media/catalog/product/f/i/ficus_pumila_variegata_creeping_fig_josh_s_frogs_-_068.jpg"
-            }
-          ]}
+          data={this.state.plants}
+          keyExtractor={this._keyExtractor}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.card}
               onPress={() =>
-                this.props.navigation.navigate("Plant", { title: item.key })
+                this.props.navigation.navigate("Plant", { plant: item })
               }
             >
-              <Text style={styles.item}>{item.key}</Text>
+              <Text style={styles.item}>{item.name}</Text>
 
               <Image
                 style={{
@@ -58,7 +80,7 @@ class HomeScreen extends React.Component {
                   height: 55,
                   margin: 10
                 }}
-                source={{ uri: item.src }}
+                source={{ uri: item.photoPath }}
               />
             </TouchableOpacity>
           )}

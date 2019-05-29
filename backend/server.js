@@ -138,10 +138,14 @@ router.post('/addPlant', async (req, res) => {
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
   if (user) {
+      if(!req.body.photoPath) {
+        req.body.photoPath = "https://mashtalegypt.com/wp-content/uploads/2017/05/update-1.png";
+      }
       plant = new Plant({
         userID: user._id,
         name: req.body.name,
         species: req.body.species,
+        photoPath: req.body.photoPath,
       });
       let response = await plant.save();
       res.send(response);
@@ -153,7 +157,7 @@ router.post('/addPlant', async (req, res) => {
 /**
  * Get my plants
  */
-router.get('/myPlants', async (req, res) => {
+router.post('/myPlants', async (req, res) => {
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
   if (user) {
@@ -185,6 +189,21 @@ router.post('/deleteUser', async (req, res) => {
       res.send(response);
   } else {
       return res.status(400).send('That user doesnt exist!');
+  }
+});
+
+/**
+ * TODO: Delete this
+ * Delete User 
+ */
+router.post('/deletePlant', async (req, res) => {
+  let plant = await Plant.findOne({ name: req.body.name });
+  if (plant) {
+      //Delete's User
+      let response = await Plant.deleteOne({ name: req.body.name, userID: '5ced8c79b8734f1ca81b900b' })
+      res.send(response);
+  } else {
+      return res.status(400).send('That plant doesnt exist!');
   }
 });
 

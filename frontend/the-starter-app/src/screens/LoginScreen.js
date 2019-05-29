@@ -62,8 +62,8 @@ class LoginScreen extends React.Component {
                 index: 0,
                 actions: [
                   NavigationActions.navigate({
-                    routeName: "Home"
-                    //params: { someParams: 'parameters goes here...' },
+                    routeName: "Home",
+                    params: { username: this.state.username },
                   })
                 ]
               })
