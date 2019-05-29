@@ -22,11 +22,42 @@ class SettingsScreen extends React.Component {
       oldPassword: "",
       newPassword: "",
       confirmNewPassword: "",
+      errorMsg: "",
     };
   }
 
+  validateLogin(min, max)
+  {
+    if(this.state.confirmPassword != this.state.password) {
+      this.setState({
+        errorMsg:"The passwords don't match"
+      })
+      return false;
+    }
+
+    if(this.state.password.length < min || this.state.password.length > max) {
+      this.setState({
+        errorMsg:"Password must be " + min + " to " + max + " characters long"
+      })
+      return false;
+    }
+    else if(!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
+      this.setState({
+        errorMsg: "Password must be alphanumeric"
+      })
+      return false;
+    }
+    return true
+  }
+
+  handleOldPassword = oldPassword => this.setState({ oldPassword });
   handleNewPassword = newPassword => this.setState({ newPassword });
   handleConfirmNewPassword = confirmNewPassword => this.setState({ confirmNewPassword });
+
+  handleChangePassword = () =>{
+    if(!this.validateLogin(5,20))
+    return;
+  }
 
   render() {
 
@@ -59,6 +90,9 @@ class SettingsScreen extends React.Component {
       returnKeyType="next"
       />
 
+      <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
+
+
       </View>
 
       <View style={styles.buttonSection}>
@@ -68,7 +102,7 @@ class SettingsScreen extends React.Component {
       //Se estiver certo, pedir para substituir na db
       style={styles.button}
       label="Change Password"
-      //onPress={this.handleAddPress}
+      onPress={this.handleChangePassword}
       />
 
       </View>
@@ -93,6 +127,13 @@ class SettingsScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+
+  errorMsg: {
+    color: "red",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
   },
 
   bgImage: {
