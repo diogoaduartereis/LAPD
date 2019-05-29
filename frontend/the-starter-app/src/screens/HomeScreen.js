@@ -21,10 +21,19 @@ class HomeScreen extends React.Component {
       msg: "",
       plants: [],
       showLoading: false,
+      refreshing: false,
     };
   }
 
   _keyExtractor = (item, index) => item._id;
+
+  handleRefresh = () => {
+    this.setState({
+      refreshing: true,
+    }, () => {
+      this.fetchPlants();
+    })
+  }
 
   deletePlant(_id) {
     this.setState({
@@ -43,7 +52,7 @@ class HomeScreen extends React.Component {
       })
       .then(data => {
         if(data.status == 200) {
-          this.componentWillMount();
+          this.fetchPlants();
         }
         else {
           alert("Failed to delete plant");
@@ -70,32 +79,44 @@ class HomeScreen extends React.Component {
     );
   }
 
-  componentWillMount() {
-    this.setState({ showLoading: true });
-    let username = this.props.navigation.state.params.username;
-    this.setState({username: username});
-    global.USERNAME = username;
+  fetchPlants() {
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/myPlants", {
         method: 'GET',
         headers: {
-          username: username,
+          username: global.USERNAME,
         },
       }).then(data => {
         if(data.status != 200) {
           this.setState({
             msg: "You currently don't have any plants.",
             showLoading: false,
+            refreshing: false,
           })
         }
         else {
           this.setState({
             plants: JSON.parse(data._bodyText),
             showLoading: false,
+            refreshing: false,
           });
         }
+      }).catch((error) => {
+        console.log(error);
+        this.setState({
+          showLoading: false,
+          refreshing: false,
+        });
       });
     }, 3000)
+  }
+
+  componentWillMount() {
+    this.setState({ showLoading: true });
+    let username = this.props.navigation.state.params.username;
+    this.setState({username: username});
+    global.USERNAME = username;
+    this.fetchPlants();
   }
 
   render() {
@@ -125,6 +146,8 @@ class HomeScreen extends React.Component {
             contentContainerStyle={{ paddingBottom: 50 }}
             data={this.state.plants}
             keyExtractor={this._keyExtractor}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.card}

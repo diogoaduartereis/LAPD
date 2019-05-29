@@ -42,7 +42,6 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         headerTintColor: "black",
         // title: "Plant",
-        headerTitleStyle: { flex: 1, textAlign: "center" },
         headerTintColor: "white",
         headerStyle: {
           backgroundColor: colors.GREEN2
