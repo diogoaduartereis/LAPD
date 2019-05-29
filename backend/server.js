@@ -5,6 +5,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const bcrypt = require('bcrypt');
+const multer  = require('multer')
+const upload = multer({ dest: __dirname + 'uploads/' })
 
 
 /**
@@ -120,6 +122,15 @@ router.post('/login', async (req, res) => {
   }
 });
 
+/**
+ *  Upload plant image
+ */
+router.post('/uploadPlantImage', upload.single('file'), function (req, res, next) {
+    console.log(req.file)
+    console.log(req.body)
+
+    return res.json(req.file);
+})
 
 /**
  * Add plant
@@ -163,6 +174,28 @@ router.post('/deletePlant', async (req, res) => {
       return res.status(400).send('Error deleting plant');
   }
 });
+
+/**
+ * TODO: Compare Passwords
+ */
+router.post('/comparePW', async (req, res) => {
+  let response = await User.findOne({ username: req.body.username})
+  if(response) {
+    if(this.compareHash(req.body.oldPassword, response.password)) {
+      bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(req.body.newpassword, salt, async function(err, hash) {
+            hashedPW = hash;
+            await User.updateOne({ username: req.body.username}, {password:hashedPW})
+            res.status(200).send('Successfully Updated Password');
+          });
+        });
+    }
+  }
+  else {
+    return res.status(400).send('Error deleting plant');
+}
+});
+
 
 // Development Testing Routes
  
