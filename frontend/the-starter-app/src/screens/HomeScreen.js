@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { NavigationActions, StackActions } from "react-navigation";
 
+global.USERNAME = '';
+
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -17,15 +19,14 @@ class HomeScreen extends React.Component {
       msg: "",
       plants: [],
     };
-
-    this.myplants = this.state.plants.map((item, key) => {
-      
-    })
   }
+
+  _keyExtractor = (item, index) => item._id;
 
   componentDidMount() {
     let username = this.props.navigation.state.params.username;
     this.setState({username: username});
+    global.USERNAME = username;
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/myPlants", {
         method: 'POST',
@@ -63,6 +64,7 @@ class HomeScreen extends React.Component {
           style={{ paddingTop: 20 }}
           contentContainerStyle={{ paddingBottom: 50 }}
           data={this.state.plants}
+          keyExtractor={this._keyExtractor}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.card}
@@ -78,7 +80,7 @@ class HomeScreen extends React.Component {
                   height: 55,
                   margin: 10
                 }}
-                source={{ uri: "https://mashtalegypt.com/wp-content/uploads/2017/05/update-1.png" }}
+                source={{ uri: item.photoPath }}
               />
             </TouchableOpacity>
           )}
