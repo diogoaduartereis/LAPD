@@ -104,8 +104,8 @@ class RegisterScreen extends React.Component {
               index: 0,
               actions: [
                 NavigationActions.navigate({
-                  routeName: "Home"
-                  //params: { someParams: 'parameters goes here...' },
+                  routeName: "Home",
+                  params: { username: this.state.username }
                 })
               ]
             })
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center"
   },
+
   loading:{
     position: 'absolute', 
     top: 0, 
