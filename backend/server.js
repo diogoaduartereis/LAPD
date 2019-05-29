@@ -155,13 +155,12 @@ router.get('/myPlants', async (req, res) => {
  * TODO: Delete Plant
  */
 router.post('/deletePlant', async (req, res) => {
-  let plant = await Plant.findOne({ _id: req.body._id });
-  if (plant) {
-      //Deletes Plant
-      let response = await Plant.deleteOne({ _id: req.body._id})
+    let response = await Plant.deleteOne({ name: req.body.name})
+    if(response) {
       res.send(response);
-  } else {
-      return res.status(400).send('That plant doesnt exist!');
+    }
+    else {
+      return res.status(400).send('Error deleting plant');
   }
 });
 
