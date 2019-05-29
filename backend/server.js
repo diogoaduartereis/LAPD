@@ -154,6 +154,10 @@ router.post('/addPlant', async (req, res) => {
       name: req.body.name,
       species: req.body.species,
       photoPath: req.body.photoPath,
+      plantMinTemperature: req.body.plantMinTemperature,
+      plantShadeTolerance: req.body.plantShadeTolerance,
+      plantPrecipitationMax: req.body.plantPrecipitationMax,
+      plantPrecipitationMin: req.body.plantPrecipitationMin
     });
     let response = await plant.save();
     res.send(response);
