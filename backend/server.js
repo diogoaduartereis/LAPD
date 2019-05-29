@@ -4,7 +4,6 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
-const { User, validate } = require('./models/user');
 const bcrypt = require('bcrypt');
 
 
@@ -13,6 +12,8 @@ const bcrypt = require('bcrypt');
  */ 
 const dataModel = require("./models");
 const Data = dataModel.models.Data    //model for htu21d
+const { User, validate } = require('./models/user'); //model for the Users
+const Plant = require('./models/plant'); //model for the Plants
 
 
 /**
@@ -133,15 +134,37 @@ router.post('/addPlant', async (req, res) => {
   // Check if this user already exists
   let user = await User.findOne({ username: req.body.username });
   if (user) {
-      //Delete's User
-      let response = await User.deleteOne({ username: req.body.username})
+      plant = new Plant({
+        userID: user._id,
+        name: req.body.name,
+        species: req.body.species,
+      });
+      let response = await plant.save();
       res.send(response);
   } else {
       return res.status(400).send('That user doesnt exist!');
   }
 });
 
+/**
+ * Get my plants
+ */
+router.get('/myPlants', async (req, res) => {
+  // First Validate The Request
+  const { error } = validate(req.body);
+  if (error) {
+      return res.status(400).send(error.details[0].message);
+  }
 
+  // Check if this user already exists
+  let user = await User.findOne({ username: req.body.username });
+  if (user) {
+    let plants = await Plant.findAll({userID: user._id})
+    console.log(plants);
+  } else {
+      return res.status(400).send('That user doesnt exist!');
+  }
+});
 
 // Development Testing Routes
  
