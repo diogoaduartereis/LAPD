@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   View,
+  TouchableOpacity
 } from "react-native";
 import Button from "../components/Button";
 import FormTextInput from "../components/FormTextInput";
@@ -28,14 +29,19 @@ class AddPlantScreen extends React.Component {
   handlePlantSpecies = plantSpecies => this.setState({ plantSpecies });
 
   render() {
+    let {
+      plantPicture
+    } = this.state;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Image style={styles.bgImage} source={imageBackground} />
 
+        <TouchableOpacity activeOpacity = { .5 } onPress={ this._takePhoto }>
         <Image
           source={placeholderImage}
           style={styles.uploadImage}
         />
+        </TouchableOpacity>
 
         <View style={styles.form}>
           <FormTextInput
@@ -66,40 +72,105 @@ class AddPlantScreen extends React.Component {
       </KeyboardAvoidingView>
     );
   }
+
+_takePhoto = async () => {
+  console.log("inside take photo");
+  const {
+    status: cameraPerm
+  } = await Permissions.askAsync(Permissions.CAMERA);
+
+  const {
+    status: cameraRollPerm
+  } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+  // only if user allows permission to camera AND camera roll
+  if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    this._handleImagePicked(pickerResult);
+  }
+};
+
+_pickImage = async () => {
+  const {
+    status: cameraRollPerm
+  } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+  // only if user allows permission to camera roll
+  if (cameraRollPerm === 'granted') {
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    this._handleImagePicked(pickerResult);
+  }
+};
+
+_handleImagePicked = async pickerResult => {
+  let uploadResponse, uploadResult;
+
+  try {
+    this.setState({
+      uploading: true
+    });
+
+    if (!pickerResult.cancelled) {
+      uploadResponse = await uploadImageAsync(pickerResult.uri);
+      uploadResult = await uploadResponse.json();
+
+      this.setState({
+        plantPicture: uploadResult.location
+      });
+    }
+  } catch (e) {
+    console.log({ uploadResponse });
+    console.log({ uploadResult });
+    console.log({ e });
+    alert('Upload failed, sorry :(');
+  } finally {
+    this.setState({
+      uploading: false
+    });
+  }
+};
 }
 
-async function takeAndUploadPhotoAsync() {
-  // Display the camera to the user and wait for them to take a photo or to cancel
-  // the action
-  let result = await ImagePicker.launchCameraAsync({
-    allowsEditing: true,
-    aspect: [4, 3],
+async function uploadImageAsync(uri) {
+  let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
+
+  // Note:
+  // Uncomment this if you want to experiment with local server
+  //
+  // if (Constants.isDevice) {
+  //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
+  // } else {
+  //   apiUrl = `http://localhost:3000/upload`
+  // }
+
+  let uriParts = uri.split('.');
+  let fileType = uriParts[uriParts.length - 1];
+
+  let formData = new FormData();
+  formData.append('photo', {
+    uri,
+    name: `photo.${fileType}`,
+    type: `image/${fileType}`,
   });
 
-  if (result.cancelled) {
-    return;
-  }
-
-  // ImagePicker saves the taken photo to disk and returns a local URI to it
-  let localUri = result.uri;
-  let filename = localUri.split('/').pop();
-
-  // Infer the type of the image
-  let match = /\.(\w+)$/.exec(filename);
-  let type = match ? `image/${match[1]}` : `image`;
-
-  // Upload the image using the fetch and FormData APIs
-  let formData = new FormData();
-  // Assume "photo" is the name of the form field the server expects
-  formData.append('photo', { uri: localUri, name: filename, type });
-
-  return await fetch(YOUR_SERVER_URL, {
+  let options = {
     method: 'POST',
     body: formData,
-    header: {
-      'content-type': 'multipart/form-data',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
     },
-  });
+  };
+
+  return fetch(apiUrl, options);
 }
 
 const styles = StyleSheet.create({
@@ -157,21 +228,6 @@ const styles = StyleSheet.create({
     height: 44,
     textAlignVertical: "center"
   },
-
-  card: {
-    marginVertical: 15,
-    marginHorizontal: 20,
-    borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#f0f0f0",
-    shadowOffset: { width: 2, height: 2 },
-    shadowColor: "black",
-    shadowOpacity: 0.4,
-    opacity: 0.97,
-    flex: 1,
-    alignItems: "center"
-  }
 });
 
 export default AddPlantScreen;
