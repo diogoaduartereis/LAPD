@@ -30,7 +30,7 @@ const sensor1 = require("./htu21d/sensor");
 const app = express();
 app.use(cors());
 app.use(logger("dev"));
-
+app.use(express.static('uploads'))
 const router = express.Router();
 
 
