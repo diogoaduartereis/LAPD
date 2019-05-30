@@ -212,7 +212,7 @@ router.get('/activatePump', async (req, res) => {
     var spawn = require('child_process').spawn;
     var process = spawn('python', ['./scripts/pump.py']);
     process.stdout.on('data', function (data) {
-      console.log(data.toString('utf8'));
+      console.log(data.toString());
       if(data.toString('utf8') === "Shutdown") {
         console.log("oi");
         res.status(200).send('Activated and deactivated pump');
