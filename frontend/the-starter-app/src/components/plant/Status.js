@@ -3,6 +3,7 @@ import { ScrollView, Image, StyleSheet, View, Text } from "react-native";
 import { NavigationActions, StackActions } from "react-navigation";
 import Button from "../../components/Button";
 import colors from "../../config/colors";
+import * as Progress from 'react-native-progress';
 
 class Status extends React.Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class Status extends React.Component {
     this.state = {
       plant: {}
     };
+
+    this.handleWaterPress =  this.handleWaterPress.bind(this);
   }
 
   componentWillMount() {
@@ -19,6 +22,9 @@ class Status extends React.Component {
   }
 
   handleWaterPress() {
+    this.setState({
+      showLoading: true,
+    })
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/activatePump", {
         method: 'GET',
@@ -26,14 +32,14 @@ class Status extends React.Component {
           username: global.USERNAME,
         },
       }).then(data => {
-        if(data.status != 200) {
+        if(data.status != 200 || data.status != 304) {
           alert('Successfully activated pump')
           this.setState({
             showLoading: false,
           })
         }
         else {
-          alert('Couldn\' Activate Pump')
+          alert('Couldn\'t Activate Pump')
           this.setState({
             showLoading: false,
           });
@@ -45,7 +51,7 @@ class Status extends React.Component {
           refreshing: false,
         });
       });
-    }, 3000)
+    }, 10000)
   }
 
   render() {
