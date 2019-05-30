@@ -209,12 +209,13 @@ router.post('/comparePW', async (req, res) => {
  * Receive get to activate pump
  */
 router.get('/activatePump', async (req, res) => {
-    // using spawn instead of exec, prefer a stream over a buffer
-    // to avoid maxBuffer issue
     var spawn = require('child_process').spawn;
     var process = spawn('python', ['./scripts/pump.py']);
-  process.stdout.on('data', function (data) {
-    console.log(data.toString('utf8'));
+    process.stdout.on('data', function (data) {
+      console.log(data.toString('utf8'));
+      if(data.toString('utf8') == "Shutdown") {
+        res.status(200).send('Activated and deactivated pump');
+      }
   });
 });
 
