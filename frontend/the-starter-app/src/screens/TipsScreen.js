@@ -18,7 +18,7 @@ class TipsScreen extends React.Component {
     };
   }
 
-    _keyExtractor = (item, index) => item._id;
+  _keyExtractor = (item, index) => item._id;
 
   handleRefresh = () => {
     this.setState({
@@ -28,96 +28,63 @@ class TipsScreen extends React.Component {
     })
   }
 
-    componentWillMount() {
-        this.setState({ showLoading: true });
-    }
+  componentWillMount() {
+    this.setState({ showLoading: true });
+  }
 
-    render() {
-        const { navigation } = this.props;
-            return (
+  render() {
+    const { navigation } = this.props;
+    return (
 
-              <View style = {styles.container}>
-                <View style={styles.container}>
-                  <Image
-                    style={styles.bgImage}
-                    source={require("../assets/images/background4.png")}
-                  />
-                </View>
+      <View style={styles.container}>
+        <View style={styles.container}>
+          <Image
+            style={styles.bgImage}
+            source={require("../assets/images/background4.png")}
+          />
+        </View>
 
-                <FlatList
-                  style={{ paddingTop: 20 }}
-                  contentContainerStyle={{ paddingBottom: 50 }}
-                  data={"Olá, sou a primeira cena"}
-                  keyExtractor={this._keyExtractor}
-                  refreshing={this.state.refreshing}
-                  onRefresh={this.handleRefresh}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={styles.card}
-                      onPress={() => navigation.navigate("Plant")
-                      }
-                      onLongPress={() =>
-                        this._onLongPressButton(item._id, item.name)
-                      }
-                    >
-                    <Text style={styles.item}>{item.name}</Text>
-                    />
-                    </TouchableOpacity>
-                  )}
-                  />
+      <Text> "Minimum Temperature : 20 °C" </Text>
+      <Text> "Shade Tolerance : Medium" </Text>
+      <Text> "Maximum Precipitation : 32 cm" </Text>
+      <Text> "Minimum Precipitation : 97 cm" </Text>
 
-                </View>
-/*
-                <FlatList
-                  style={{ paddingTop: 20 }}
-                  contentContainerStyle={{ paddingBottom: 50 }}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={styles.card}
-                      onPress={() => navigation.navigate("Plant")}
-                    >
+      </View>
 
-
-                    </TouchableOpacity>
-                  )}
-                />
-
-*/
-
-            )
-        }
+    )
+  }
 
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center"
-    },
+  container: {
+    flex: 1,
+    alignItems: "center"
+  },
 
-    bgImage: {
-        flex: 1,
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        justifyContent: "center",
-        opacity: 0.4
-    },
-    card: {
-        justifyContent: "center",
-        backgroundColor: "white",
-        paddingVertical: 15,
-        width: "100%",
-        borderColor: "#DADADA",
-        borderTopWidth: 0.7,
-        borderBottomWidth: 0.7
-    },
+  bgImage: {
+    flex: 1,
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    opacity: 0.4
+  },
+  card: {
+    justifyContent: "center",
+    backgroundColor: "white",
+    paddingVertical: 15,
+    width: "100%",
+    borderColor: "#DADADA",
+    borderTopWidth: 0.7,
+    borderBottomWidth: 0.7
+  },
 
-    icon: {
-        width: 30,
-        height: 30,
-        marginBottom: 10
-    },
+  icon: {
+    width: 30,
+    height: 30,
+    marginBottom: 10
+  },
 });
 
 
