@@ -1,59 +1,71 @@
-import React, { Component } from 'react';
-import { FlatList, StyleSheet, View, Image, ScrollView, Linking, TouchableOpacity } from 'react-native';
-import { Text, Divider } from 'react-native-elements';
-import * as Progress from 'react-native-progress';
-import colors from "../config/colors";
-import Button from "../components/Button";
-import ScrollableTabView, {
-  DefaultTabBar
-} from "react-native-scrollable-tab-view";
+import React, { Component } from "react";
+import {
+  Text,
+  FlatList,
+  StyleSheet,
+  View,
+  Image,
+  ScrollView,
+  Linking,
+  TouchableOpacity
+} from "react-native";
 
 class TipsScreen extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      showLoading: false,
-      refreshing: false,
-    };
-  }
-
-  _keyExtractor = (item, index) => item._id;
-
-  handleRefresh = () => {
-    this.setState({
-      refreshing: true,
-    }, () => {
-      this.fetchPlants();
-    })
-  }
-
-  componentWillMount() {
-    this.setState({ showLoading: true });
-  }
-
   render() {
-    const { navigation } = this.props;
+    const plant = this.props.navigation.state.params.plant;
+
     return (
-
       <View style={styles.container}>
-        <View style={styles.container}>
-          <Image
-            style={styles.bgImage}
-            source={require("../assets/images/background4.png")}
-          />
+        <Image
+          style={styles.bgImage}
+          source={require("../assets/images/background4.png")}
+        />
+
+        <View style={[styles.card, { padding: 20, paddingVertical: 30 }]}>
+          <Text
+            style={{
+              marginBottom: 20,
+              lineHeight: 30,
+              fontSize: 16,
+              fontWeight: "bold"
+            }}
+          >
+            Some facts about {plant.species} specie
+          </Text>
+
+          <Text style={{ lineHeight: 40, fontSize: 14 }}>
+            {plant.plantMinTemperature ? (
+              <Text>
+                Minimum temperature: {plant.plantMinTemperature}
+                {"\n"}
+              </Text>
+            ) : null}
+
+            {plant.plantShadeTolerance ? (
+              <Text>
+                Shade tolerance: {plant.plantShadeTolerance}
+                {"\n"}
+              </Text>
+            ) : null}
+
+            {plant.plantPrecipitationMax ? (
+              <Text>
+                Minimum precipitation: {plant.plantPrecipitationMax}
+                {"\n"}
+              </Text>
+            ) : null}
+
+            {plant.plantPrecipitationMin ? (
+              <Text>
+                Maximum precipitation: {plant.plantPrecipitationMin}
+                {"\n"}
+              </Text>
+            ) : null}
+          </Text>
         </View>
-
-      <Text> "Minimum Temperature : 20 °C" </Text>
-      <Text> "Shade Tolerance : Medium" </Text>
-      <Text> "Maximum Precipitation : 32 cm" </Text>
-      <Text> "Minimum Precipitation : 97 cm" </Text>
-
       </View>
-
-    )
+    );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -84,8 +96,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginBottom: 10
-  },
+  }
 });
-
 
 export default TipsScreen;

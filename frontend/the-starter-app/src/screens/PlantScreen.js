@@ -111,7 +111,7 @@ class PlantScreen extends React.Component {
             style={styles.bgImage}
             source={require("../assets/images/background4.png")}
           />
-          <Tips navigation={this.props.navigation.navigate("Tips")} />
+          <Tips plant={this.state.plant} navigation={this.props.navigation} />
         </View>
       </ScrollableTabView>
     );

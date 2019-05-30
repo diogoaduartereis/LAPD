@@ -7,7 +7,7 @@ import colors from "../../config/colors";
 class Tips extends React.Component {
   render() {
 
-    const { navigation } = this.props;
+    const { plant, navigation } = this.props;
 
     return (
       <View style={[styles.card, { padding: 20, paddingVertical: 30 }]}>
@@ -20,14 +20,17 @@ class Tips extends React.Component {
           />
 
           <Text style={styles.tipText}>
-            This plant prefers full sun but will adapt to partial shade.
+            You can find more about {plant.species} specie.
           </Text>
         </View>
 
         <View style={{ alignItems: "center" }}>
           <Button
             style={[styles.waterButton, { backgroundColor: colors.YELLOW }]}
-            label="KNOW MORE"
+            label="Know more"
+            onPress={() =>
+                navigation.navigate("Tips", {plant:plant})
+              }
           />
         </View>
 
@@ -42,15 +45,14 @@ class Tips extends React.Component {
           />
 
           <Text style={styles.tipText}>
-            According to the weather, tomorow there will be an excelent
-            humidity.
+            You can get the current weather in your location.
           </Text>
         </View>
 
         <View style={{ alignItems: "center" }}>
           <Button
             style={[styles.waterButton, { backgroundColor: colors.BLUE }]}
-            label="KNOW MORE"
+            label="See weather"
             onPress={() =>
                 navigation.navigate("Weather")
               }

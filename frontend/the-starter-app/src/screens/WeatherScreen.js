@@ -63,6 +63,7 @@ class WeatherScreen extends React.Component {
                 console.log("Api call error");
                 alert(error.message);
             });
+            
     }
 
     render() {
@@ -76,7 +77,7 @@ class WeatherScreen extends React.Component {
                         source={require("../assets/images/background4.png")} />
 
                     <View style={{ marginTop: 200 }}>
-                        <Progress.CircleSnail size={100} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />
+                        <Progress.CircleSnail thickness={5}  size={100} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />
                     </View>
                 </View>
             )

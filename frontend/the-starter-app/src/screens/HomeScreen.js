@@ -159,7 +159,7 @@ class HomeScreen extends React.Component {
                   source={require("../assets/images/background4.png")} />
 
               <View style={{ marginTop: 200 }}>
-                  <Progress.CircleSnail size={100} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />
+                  <Progress.CircleSnail size={100} thickness={5}  color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />
               </View>
           </View>
       )
@@ -172,7 +172,7 @@ class HomeScreen extends React.Component {
           />
 
           <FlatList
-            style={{ paddingTop: 20 }}
+            style={{ paddingTop: 25 }}
             contentContainerStyle={{ paddingBottom: 50 }}
             data={this.state.plants}
             keyExtractor={this._keyExtractor}
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    marginVertical: 15,
+    marginVertical: 10,
     marginHorizontal: 20,
     borderRadius: 10,
     flexDirection: "row",

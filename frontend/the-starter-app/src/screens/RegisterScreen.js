@@ -81,7 +81,9 @@ class RegisterScreen extends React.Component {
   handleRegisterPress = () => {
 
     if(!this.validateLogin(5,20)) return;
-    this.setState({ loading:true })
+    
+    this.setState({ loading:true, errorMsg:"" })
+
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/register", {
         method: 'POST',
@@ -171,7 +173,7 @@ class RegisterScreen extends React.Component {
             onPress={() => this.props.navigation.navigate("Login")}
           >
             <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
-            <Text style={styles.btnText}>Already have a account?</Text>
+            <Text style={styles.btnText}>Already have an account?</Text>
           </TouchableOpacity>
         </View>
 

@@ -41,7 +41,7 @@ class LoginScreen extends React.Component {
 
   handleLoginPress = () => {
     
-    this.setState({ loading:true })
+    this.setState({ loading:true, errorMsg:"" })
 
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/login", {

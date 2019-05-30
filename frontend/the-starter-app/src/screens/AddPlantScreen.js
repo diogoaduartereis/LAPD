@@ -191,7 +191,7 @@ class AddPlantScreen extends React.Component {
     fetch("https://trefle.io/api/plants/"+plantID, {
       method: 'GET',
       headers: {
-        'Authorization': 'Bearer '+ 'TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09', 
+        'Authorization': 'Bearer '+ 'c29CNlpKeENqMUsrbmIvNlhIRExMdz09', 
         'Content-Type': 'application/json',
       }
     })
@@ -215,11 +215,13 @@ class AddPlantScreen extends React.Component {
       fetch("https://trefle.io/api/plants?q="+this.state.plantSpeciesQuery, {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer '+ 'TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09', 
+          'Authorization': 'Bearer '+ 'c29CNlpKeENqMUsrbmIvNlhIRExMdz09', 
           'Content-Type': 'application/json',
         }
       })
       .then(data => {
+        console.log(data)
+        
         if(data.status != 200) {
           this.setState({
             errorMsg: data._bodyText

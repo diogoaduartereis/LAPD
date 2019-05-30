@@ -28,8 +28,8 @@ class Readings extends React.Component {
   }
 
   componentDidMount() {
-    const temperature = this.props.data.temperature;
-    const humidity = this.props.data.humidity;
+    const temperature = this.props.data.temperature ? this.props.data.temperature : 0;
+    const humidity = this.props.data.humidity ? this.props.data.humidity : 0;
     if(!temperature || !humidity) {
       this.handleRefreshPress();
     }
@@ -77,6 +77,7 @@ class Readings extends React.Component {
               onPress={this.handleRefreshPress}
             />
           </View>
+
       </View>
     );
   }
@@ -85,9 +86,10 @@ class Readings extends React.Component {
 const styles = StyleSheet.create({
   refreshButtonSection: {
     width: "100%",
-    height: "20%",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop:50,
+    marginBottom:10
   },
 
   card: {
@@ -106,13 +108,14 @@ const styles = StyleSheet.create({
     shadowColor: "#808080",
     shadowOffset: {
       width: 0,
-      height: 9
+      height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 12.35,
-
-    elevation: 19
+    shadowRadius: 2,
+ 
   },
 });
 
 export default Readings;
+
+ 

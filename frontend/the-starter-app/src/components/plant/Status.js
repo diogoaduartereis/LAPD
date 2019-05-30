@@ -9,7 +9,10 @@ class Status extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      plant: {}
+      plant: {},
+      temperature: 0,
+      humidity: 0,
+      global: 'ok'
     };
 
     this.handleWaterPress =  this.handleWaterPress.bind(this);
@@ -19,6 +22,23 @@ class Status extends React.Component {
     this.setState({
       plant: this.props.plant,
     })
+
+    fetch("http://" + global.SERVERIP + "/api/getSensor")
+          .then(data => data.json())
+          .then(res => {
+            this.setState({ 
+              temperature: res.data.temperature,
+              humidity: res.data.humidity,
+            });
+
+            if(this.state.plant.plantMinTemperature && this.state.temperature!=0){
+              if( this.state.plant.plantMinTemperature > this.state.temperature ){
+                this.setState({ 
+                  global: 'warning',
+                });
+              }
+            }
+          });
   }
 
   handleWaterPress() {
@@ -72,22 +92,31 @@ class Status extends React.Component {
 
         <View style={{ position: "absolute", top: 45, right: 240 }}>
           <Image
-            source={require("../../assets/images/warning.png")}
+            source={this.state.global=='ok'?require("../../assets/images/success.png"):require("../../assets/images/warning.png")}
             style={styles.icon}
           />
         </View>
 
         <View style={[styles.card, { alignItems: "center", margin: 20 }]}>
-          <Text style={{ lineHeight: 30 }}>
-            <Text style={{ fontWeight: "bold" }}>Warning!{"\n"}</Text>
-            It looks like the plant needs to be watered! 
+          
+        {this.state.global!='ok'? 
+        <Text style={{ lineHeight: 30 }}>
+            <Text style={{ fontWeight: "bold" }}>Warning!{"\n"}</Text> 
+            <Text > It looks like the plant needs to be watered! </Text> 
           </Text>
+        : 
+        
+        <View style={{ paddingVertical:30}}><Text style={{ lineHeight: 30 }}> Everything seems fine! </Text></View>
+        }
+ 
 
-          <Button 
+          {this.state.global!='ok'?   <Button 
             style={styles.waterButton} label="WATER THE PLANT" 
             onPress={this.handleWaterPress}
-            />
+            /> : null}
+       
 
+         
           {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
         </View>
       </View>
