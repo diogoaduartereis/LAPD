@@ -214,6 +214,7 @@ router.get('/activatePump', async (req, res) => {
     process.stdout.on('data', function (data) {
       console.log(data.toString('utf8'));
       if(data.toString('utf8') == "Shutdown") {
+        console.log("oi");
         res.status(200).send('Activated and deactivated pump');
       }
   });
