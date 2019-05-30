@@ -189,7 +189,7 @@ router.post('/deletePlant', async (req, res) => {
  */
 router.post('/comparePW', async (req, res) => {
   let response = await User.findOne({ username: req.body.username})
-  console.log(response);
+  console.log(req.body.oldPassword);
   if(response) {
     if(compareHash(req.body.oldPassword, response.password)) {
       bcrypt.genSalt(saltRounds, function(err, salt) {
