@@ -228,12 +228,11 @@ const styles = StyleSheet.create({
     shadowColor: "#808080",
     shadowOffset: {
       width: 0,
-      height: 9
+      height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 12.35,
+    shadowRadius: 2,
 
-    elevation: 19
   },
 
   buttonLogout: {
@@ -242,14 +241,13 @@ const styles = StyleSheet.create({
     shadowColor: "#808080",
     shadowOffset: {
       width: 0,
-      height: 9
+      height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 12.35,
+    shadowRadius: 2,
 
-    elevation: 19
   },
-
+  
   buttonSection: {
     width: "100%",
     height: "20%",
@@ -334,12 +332,11 @@ const styles = StyleSheet.create({
     shadowColor: "#808080",
     shadowOffset: {
       width: 0,
-      height: 9
+      height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 12.35,
+    shadowRadius: 2,
 
-    elevation: 19
   },
 });
 

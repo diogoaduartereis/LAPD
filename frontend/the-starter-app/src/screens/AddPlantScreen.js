@@ -221,7 +221,7 @@ class AddPlantScreen extends React.Component {
       })
       .then(data => {
         console.log(data)
-        
+
         if(data.status != 200) {
           this.setState({
             errorMsg: data._bodyText
@@ -344,12 +344,11 @@ const styles = StyleSheet.create({
     shadowColor: "#808080",
     shadowOffset: {
       width: 0,
-      height: 9
+      height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 12.35,
+    shadowRadius: 6,
 
-    elevation: 19
   },
 
   buttonSection: {
