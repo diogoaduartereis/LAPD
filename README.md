@@ -45,6 +45,8 @@ Notes:
 In the backend folder, the .env file defines the PORT where the server will run. 
 In the fronted folder, the App.js file defines the SERVERIP, the address where the backend will be running.
 
+The server will be running on a raspberry pi. A led and the htu21d sensor must be connected.
+
 To run locally, connect both the app and the raspberry pi to the same network. 
 Using ifconfig command on a terminal, the local ip address of the raspberry pi can be found, and used in the app.
 
