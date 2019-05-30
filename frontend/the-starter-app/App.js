@@ -7,12 +7,11 @@ import PlantScreen from "./src/screens/PlantScreen";
 import WeatherScreen from "./src/screens/WeatherScreen";
 import AddPlantScreen from "./src/screens/AddPlantScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
-import Button from "./src/components/Button";
+import TipsScreen from "./src/screens/TipsScreen";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 global.SERVERIP = '94.60.211.16:3001';
-global.USERNAME = 'admin';
 
 const AppNavigator = createStackNavigator(
   {
@@ -27,10 +26,12 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         headerTintColor: "black",
         title: "Add new plant",
+        headerTitleStyle: { flex: 1, textAlign: "center" },
         headerTintColor: "white",
         headerStyle: {
           backgroundColor: colors.GREEN2
         }
+
       }
     },
     Register: {
@@ -42,11 +43,10 @@ const AppNavigator = createStackNavigator(
       screen: PlantScreen,
       navigationOptions: {
         headerTintColor: "black",
-        // title: "Plant",
         headerTintColor: "white",
         headerStyle: {
           backgroundColor: colors.GREEN2
-        },
+        }
       }
     },
 
@@ -74,12 +74,25 @@ const AppNavigator = createStackNavigator(
 
     },
 
-
   Settings: {
     screen: SettingsScreen,
     navigationOptions: {
       headerTintColor: "black",
       title: "Settings",
+      headerTitleStyle: { flex: 1, textAlign: "center" },
+      headerTintColor: "white",
+      headerStyle: {
+        backgroundColor: colors.GREEN2
+      }
+    }
+  },
+
+  Tips: {
+    screen: TipsScreen,
+    navigationOptions: {
+      headerTintColor: "black",
+      title: "Tips",
+      headerTitleStyle: { flex: 1, textAlign: "center" },
       headerTintColor: "white",
       headerStyle: {
         backgroundColor: colors.GREEN2
