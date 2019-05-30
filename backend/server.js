@@ -122,10 +122,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
+let type = upload.single('file')
 /**
  *  Upload plant image
  */
-router.post('/uploadPlantImage', upload.single('photo'), function (req, res, next) {
+router.post('/uploadPlantImage', type, function (req, res, next) {
     console.log(req.file)
     console.log(req.body)
     return res.json(req.file);

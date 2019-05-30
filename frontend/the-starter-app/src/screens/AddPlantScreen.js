@@ -199,7 +199,6 @@ class AddPlantScreen extends React.Component {
   }
 
   _takePhoto = async () => {
-    console.log("inside take photo");
     const {
       status: cameraPerm
     } = await Permissions.askAsync(Permissions.CAMERA);
@@ -256,9 +255,6 @@ class AddPlantScreen extends React.Component {
         });
       }
     } catch (e) {
-      console.log({ uploadResponse });
-      console.log({ uploadResult });
-      console.log({ e });
       alert('Upload failed, sorry :(');
     } finally {
       this.setState({
@@ -275,9 +271,8 @@ async function uploadImageAsync(uri) {
   let fileType = uriParts[uriParts.length - 1];
 
   let formData = new FormData();
-  console.log(uri)
-  formData.append('photo', {
-    uri:uri,
+  formData.append('file',{
+    uri,
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
   });
