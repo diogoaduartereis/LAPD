@@ -156,7 +156,8 @@ class AddPlantScreen extends React.Component {
           index: 0,
           actions: [
             NavigationActions.navigate({
-              routeName: "Home"
+              routeName: "Home",
+              params: { username: global.USERNAME ? global.USERNAME : "admin" }
             })
           ]
         })
