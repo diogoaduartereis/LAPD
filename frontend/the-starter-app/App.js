@@ -11,7 +11,7 @@ import TipsScreen from "./src/screens/TipsScreen";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-global.SERVERIP = '94.60.211.16:3001';
+global.SERVERIP = '192.168.1.214:3001';
 
 const AppNavigator = createStackNavigator(
   {
