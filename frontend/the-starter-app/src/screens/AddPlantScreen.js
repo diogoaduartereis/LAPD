@@ -16,6 +16,7 @@ import colors from "../config/colors";
 import imageBackground from "../assets/images/background4.png";
 import placeholderImage from "../assets/images/uploadPlaceholder.png";
 import { Ionicons } from '@expo/vector-icons';
+import strings from "../config/strings";
 
 class AddPlantScreen extends React.Component {
   constructor(props) {
@@ -34,6 +35,27 @@ class AddPlantScreen extends React.Component {
       uploading: false,
       plantList: [],
     };
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      headerRight: (
+        <Button 
+          style={styles.settingsButton}
+          label={strings.SETTINGS_PLACEHOLDER}
+          onPress={() => params.handleSettingsPress()}
+        /> 
+      ),
+    }
+  };
+
+  componentWillMount() {
+    this.props.navigation.setParams({handleSettingsPress: this.handleSettingsPress.bind(this)});
+  }
+
+  handleSettingsPress() {
+    this.props.navigation.navigate("Settings");
   }
 
   handlePlantNameChange = plantName => this.setState({ plantName });
@@ -368,6 +390,18 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 12,
     height: 49,
+  },
+  settingsButton: {
+    backgroundColor: colors.GREEN,
+    shadowColor: "#808080",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    marginVertical: 20,
+    width: 90,
   },
 });
 

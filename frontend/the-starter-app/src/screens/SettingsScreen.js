@@ -1,24 +1,27 @@
 import * as React from "react";
 import {
   KeyboardAvoidingView,
-  TouchableOpacity,
-  FlatList,
   Image,
   StyleSheet,
   View,
-  Text
+  Text,
+  TouchableOpacity
 } from "react-native";
-import { NavigationActions, StackActions } from "react-navigation";
-import FormTextInput from "../components/FormTextInput";
 import Button from "../components/Button";
+import FormTextInput from "../components/FormTextInput";
+import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
-import createStackNavigator from "react-navigation";
+import strings from "../config/strings";
+import { NavigationActions, StackActions } from "react-navigation";
+import * as Progress from 'react-native-progress';
+
 
 class SettingsScreen extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      loading:false,
       oldPassword: "",
       newPassword: "",
       confirmNewPassword: "",
@@ -26,6 +29,9 @@ class SettingsScreen extends React.Component {
       succMsg: "",
     };
   }
+
+  secondTextInput = React.createRef();
+  thirdTextInput = React.createRef();
 
   validateLogin(min, max)
   {
@@ -70,8 +76,10 @@ class SettingsScreen extends React.Component {
         }),
       })
       .then(data => {
+        this.setState({ loading:false })
         return data.status;
       }).catch(error => {
+        this.setState({ loading:false })
         console.log(error);
         return error;
       });
@@ -80,77 +88,95 @@ class SettingsScreen extends React.Component {
 
   handlePressChange = () =>{
     if(!this.validateLogin(5,20)) return;
-    else {
-      let response = fetchAndComparePasswords(global.USERNAME, this.state.newPassword);
-      if(response == 200) {
-        this.setState({
-          succMsg: "Password successfully updated",
-          errorMsg: "",
-        })
-      }
-      else {
-        this.setState({
-          errorMsg: "There was en error updating the password",
-          succMsg: "",
-        })
-      }
+    this.setState({ loading:true })
+    let response = fetchAndComparePasswords(global.USERNAME, this.state.newPassword);
+    if(response == 200) {
+      this.setState({
+        succMsg: "Password successfully updated",
+        errorMsg: "",
+      })
     }
-    return;
+    else {
+      this.setState({
+        errorMsg: "There was en error updating the password",
+        succMsg: "",
+      })
+    }
   }
 
   render() {
     const { navigation } = this.props;
 
     return (
-    //  <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <Image style={styles.bgImage} source={imageBackground} />
 
-      <View style={styles.container}>
-      <Image
-      style={styles.bgImage}
-      source={require("../assets/images/background4.png")}
-      />
+        <View style={styles.form}>
+          <FormTextInput
+            ref={input => {
+              this.secondTextInput = input;  
+            }}
+            value={this.state.password}
+            onChangeText={this.handleOldPassword}
+            placeholder={strings.OLDPASSWORD_PLACEHOLDER}
+            secureTextEntry={true}
+            onSubmitEditing={() => {
+              this.thirdTextInput.focus();
+            }} 
+            returnKeyType="next"
+          />
 
-      <View style = {styles.form}>
+          <FormTextInput
+            ref={input => {
+              this.secondTextInput = input;  
+            }}
+            value={this.state.password}
+            onChangeText={this.handleNewPassword}
+            placeholder={strings.NEWPASSWORD_PLACEHOLDER}
+            secureTextEntry={true}
+            onSubmitEditing={() => {
+              this.thirdTextInput.focus();
+            }} 
+            returnKeyType="next"
+          />
 
-      <FormTextInput
-      placeholder="Old Password"
-      returnKeyType="next"
-      />
+          <FormTextInput
+            ref={input => {
+              this.secondTextInput = input;  
+            }}
+            value={this.state.password}
+            onChangeText={this.handleConfirmNewPassword}
+            placeholder={strings.CONFIRMNEWPASSWORD_PLACEHOLDER}
+            secureTextEntry={true}
+            onSubmitEditing={() => {
+              this.thirdTextInput.focus();
+            }} 
+            returnKeyType="next"
+          />
 
-      <FormTextInput
-      placeholder="New Password"
-      returnKeyType="next"
-      />
+          <View style={styles.loginButtonSection}>
+            <Button
+              style={styles.loginButton}
+              label={strings.CHANGEPASSWORD_PLACEHOLDER}
+              onPress={this.handlePressChange}
+            />
+          </View>
 
-      <FormTextInput
-      placeholder="Confirm New Password"
-      returnKeyType="next"
-      />
+          <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
+          <Text style={styles.succMsg}>{this.state.errorMsg}</Text>
+        </View>
 
-      <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
-      <Text style={styles.succMsg}>{this.state.errorMsg}</Text>
+        <View style={styles.buttonLogoutSection}>
+          <Button
+          style={styles.buttonLogout}
+          label="Logout"
+          onPress={() => navigation.navigate("Login")}
+          />
+        </View>
 
-      </View>
+          {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
 
-      <View style={styles.buttonSection}>
-      <Button
-      style={styles.button}
-      label="Change Password"
-      onPress={this.handlePressChange}
-      />
-
-      </View>
-
-      <View style={styles.buttonLogoutSection}>
-      <Button
-      style={styles.buttonLogout}
-      label="Logout"
-      onPress={() => navigation.navigate("Login")}
-      />
-      </View>
-      </View>
-
-      //</KeyboardAvoidingView>
+        </KeyboardAvoidingView>
     );
   }
 }

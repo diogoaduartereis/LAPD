@@ -59,7 +59,6 @@ class LoginScreen extends React.Component {
 
         this.setState({ loading:false })
 
-        console.log(data);
         if(data.status != 200) {
           this.setState({
             errorMsg: data._bodyText,
@@ -67,24 +66,27 @@ class LoginScreen extends React.Component {
           })
         }
         else {
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: "Home",
-                    params: { username: this.state.username },
-                  })
-                ]
-              })
-            );
+          this.setState({
+            showLoading: false,
+          })
+          this.props.navigation.dispatch(
+            StackActions.reset({
+              index: 0,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: "Home",
+                  params: { username: this.state.username },
+                })
+              ]
+            })
+          );
         }}).catch(error => {
             this.setState({
               showLoading: false,
             })
             console.log(error);
           });
-        }, 1000)
+        }, 3000)
   };
 
   render() {

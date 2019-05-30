@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import * as Progress from 'react-native-progress';
 import colors from "../config/colors";
+import Button from "../components/Button";
+import strings from "../config/strings";
 
 global.USERNAME = '';
 
@@ -23,6 +25,32 @@ class HomeScreen extends React.Component {
       showLoading: false,
       refreshing: false,
     };
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      headerRight: (
+        <Button 
+          style={styles.settingsButton}
+          label={strings.SETTINGS_PLACEHOLDER}
+          onPress={() => params.handleSettingsPress()}
+        /> 
+      ),
+    }
+  };
+
+  componentWillMount() {
+    this.props.navigation.setParams({handleSettingsPress: this.handleSettingsPress.bind(this)});
+    this.setState({ showLoading: true });
+    let username = this.props.navigation.state.params.username;
+    this.setState({username: username});
+    global.USERNAME = username;
+    this.fetchPlants();
+  }
+
+  handleSettingsPress() {
+    this.props.navigation.navigate("Settings");
   }
 
   _keyExtractor = (item, index) => item._id;
@@ -109,14 +137,6 @@ class HomeScreen extends React.Component {
         });
       });
     }, 3000)
-  }
-
-  componentWillMount() {
-    this.setState({ showLoading: true });
-    let username = this.props.navigation.state.params.username;
-    this.setState({username: username});
-    global.USERNAME = username;
-    this.fetchPlants();
   }
 
   render() {
@@ -252,7 +272,19 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     //backgroundColor:'black'
-  }
+  }, 
+  settingsButton: {
+    backgroundColor: colors.GREEN,
+    shadowColor: "#808080",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    marginVertical: 20,
+    width: 90,
+  },
 });
 
 export default HomeScreen;

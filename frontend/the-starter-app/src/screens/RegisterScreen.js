@@ -112,6 +112,7 @@ class RegisterScreen extends React.Component {
           );
         }
       }).catch(error => {
+        this.setState({ loading:false })
         console.log(error);
       });
     }, 3000)
