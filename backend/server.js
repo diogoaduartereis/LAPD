@@ -23,6 +23,7 @@ const dataModel = require("./models");
 const Data = dataModel.models.Data    //model for htu21d
 const { User, validate } = require('./models/user'); //model for the Users
 const { Plant } = require('./models/plant'); //model for the Plants
+import {PythonShell} from 'python-shell';
 
 
 /**
@@ -204,6 +205,28 @@ router.post('/comparePW', async (req, res) => {
 }
 });
 
+/**
+ * Pump activation python script
+ */
+function runPumpScript(plant) {
+  PythonShell.run('my_script.py', null, function (err) {
+    if (err) throw err;
+    console.log('finished');
+  });
+}
+
+/**
+ * Receive get to activate pump
+ */
+router.get('/activatePump', async (req, res) => {
+  // Check if this user already exists
+  let plant = req.body.plant;
+  if (plant) {
+    runPumpScript(plant);
+  } else {
+      return res.status(400).send('Invalid Plant');
+  }
+});
 
 // Development Testing Routes
  

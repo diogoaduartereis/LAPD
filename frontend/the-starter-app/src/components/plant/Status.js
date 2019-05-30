@@ -18,6 +18,10 @@ class Status extends React.Component {
     })
   }
 
+  handleWaterPress() {
+    
+  }
+
   render() {
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -47,7 +51,10 @@ class Status extends React.Component {
             It looks like the plant needs to be watered! 
           </Text>
 
-          <Button style={styles.waterButton} label="WATER THE PLANT" />
+          <Button 
+            style={styles.waterButton} label="WATER THE PLANT" 
+            onPress={this.handleWaterPress}
+            />
         </View>
       </View>
     );
