@@ -189,7 +189,6 @@ router.post('/deletePlant', async (req, res) => {
  */
 router.post('/comparePW', async (req, res) => {
   let response = await User.findOne({ username: req.body.username})
-  console.log(req.body.oldPassword);
   if(response) {
     if(compareHash(req.body.oldPassword, response.password)) {
       bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -199,6 +198,9 @@ router.post('/comparePW', async (req, res) => {
             res.status(200).send('Successfully Updated Password');
           });
         });
+    }
+    else {
+      res.status(400).send('Incorrect old password');
     }
   }
   else {
