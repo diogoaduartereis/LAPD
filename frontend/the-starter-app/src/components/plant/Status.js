@@ -19,7 +19,33 @@ class Status extends React.Component {
   }
 
   handleWaterPress() {
-    
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/activatePump", {
+        method: 'GET',
+        headers: {
+          username: global.USERNAME,
+        },
+      }).then(data => {
+        if(data.status != 200) {
+          alert('Successfully activated pump')
+          this.setState({
+            showLoading: false,
+          })
+        }
+        else {
+          alert('Couldn\' Activate Pump')
+          this.setState({
+            showLoading: false,
+          });
+        }
+      }).catch((error) => {
+        console.log(error);
+        this.setState({
+          showLoading: false,
+          refreshing: false,
+        });
+      });
+    }, 3000)
   }
 
   render() {
@@ -55,6 +81,8 @@ class Status extends React.Component {
             style={styles.waterButton} label="WATER THE PLANT" 
             onPress={this.handleWaterPress}
             />
+
+          {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
         </View>
       </View>
     );
@@ -88,7 +116,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     marginVertical: 20
-  }
+  },
+
+  loading:{
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
 });
 
 export default Status;

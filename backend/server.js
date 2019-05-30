@@ -219,8 +219,6 @@ function runPumpScript(plant) {
  * Receive get to activate pump
  */
 router.get('/activatePump', async (req, res) => {
-  // Check if this user already exists
-  let plant = req.body.plant;
   if (plant) {
     runPumpScript(plant);
   } else {
