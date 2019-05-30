@@ -77,7 +77,22 @@ class SettingsScreen extends React.Component {
       })
       .then(data => {
         this.setState({ loading:false })
-        return data.status;
+        if(data.status == 200) {
+          this.setState({
+            succMsg: "Password successfully updated",
+            errorMsg: "",
+            loading: false,
+          })
+          return;
+        }
+        else {
+          this.setState({
+            errorMsg: "There was en error updating the password",
+            succMsg: "",
+            loading: false,
+          })
+          return;
+        }
       }).catch(error => {
         this.setState({ loading:false })
         console.log(error);
@@ -89,21 +104,7 @@ class SettingsScreen extends React.Component {
   handlePressChange = () =>{
     if(!this.validateLogin(5,20)) return;
     this.setState({ loading:true })
-    let response = this.fetchAndComparePasswords(global.USERNAME, this.state.newPassword);
-    if(response == 200) {
-      this.setState({
-        succMsg: "Password successfully updated",
-        errorMsg: "",
-        loading: false,
-      })
-    }
-    else {
-      this.setState({
-        errorMsg: "There was en error updating the password",
-        succMsg: "",
-        loading: false,
-      })
-    }
+    this.fetchAndComparePasswords(global.USERNAME);
   }
 
   render() {
