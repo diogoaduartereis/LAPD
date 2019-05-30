@@ -193,7 +193,7 @@ router.post('/comparePW', async (req, res) => {
     if(compareHash(req.body.oldPassword, response.password)) {
       let hashedPW = bcrypt.hashSync(req.body.oldPassword, 10);
       let data = await User.updateOne({ username: req.body.username}, {password:hashedPW})
-      console.log(data);
+      data.save();
       res.status(200).send('Successfully Updated Password');
     }
     else {
