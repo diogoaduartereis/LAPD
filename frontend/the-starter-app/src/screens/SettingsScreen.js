@@ -89,17 +89,19 @@ class SettingsScreen extends React.Component {
   handlePressChange = () =>{
     if(!this.validateLogin(5,20)) return;
     this.setState({ loading:true })
-    let response = fetchAndComparePasswords(global.USERNAME, this.state.newPassword);
+    let response = this.fetchAndComparePasswords(global.USERNAME, this.state.newPassword);
     if(response == 200) {
       this.setState({
         succMsg: "Password successfully updated",
         errorMsg: "",
+        loading: false,
       })
     }
     else {
       this.setState({
         errorMsg: "There was en error updating the password",
         succMsg: "",
+        loading: false,
       })
     }
   }
@@ -163,7 +165,7 @@ class SettingsScreen extends React.Component {
           </View>
 
           <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
-          <Text style={styles.succMsg}>{this.state.errorMsg}</Text>
+          <Text style={styles.succMsg}>{this.state.succMsg}</Text>
         </View>
 
         <View style={styles.buttonLogoutSection}>
@@ -191,6 +193,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
+  },
+
+  succMsg: {
+    color: "green",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+
+  loading:{
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
 
   bgImage: {
@@ -299,7 +318,28 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     //backgroundColor:'black'
-  }
+  }, 
+
+  loginButtonSection: {
+    width: "100%",
+    height: "20%",
+    justifyContent: "center",
+    alignItems: "center"
+  }, 
+
+  loginButton: {
+    backgroundColor: colors.GREEN2,
+
+    shadowColor: "#808080",
+    shadowOffset: {
+      width: 0,
+      height: 9
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 12.35,
+
+    elevation: 19
+  },
 });
 
 export default SettingsScreen;
