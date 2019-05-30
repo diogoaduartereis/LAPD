@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const bcrypt = require('bcrypt');
 const multer  = require('multer')
-const upload = multer({ dest: __dirname + 'uploads/' })
+const upload = multer({ dest: __dirname + '/uploads/' })
 
 
 /**
@@ -127,8 +127,6 @@ let type = upload.single('file')
  *  Upload plant image
  */
 router.post('/uploadPlantImage', type, function (req, res, next) {
-    console.log(req.file)
-    console.log(req.body)
     return res.json(req.file);
 })
 

@@ -30,6 +30,7 @@ class AddPlantScreen extends React.Component {
       plantSpeciesQuery: "",
       plantCommonName:"",
       plantPicture: null,
+      plantPicLocation: null,
       uploading: false,
       plantList: [],
     };
@@ -37,7 +38,7 @@ class AddPlantScreen extends React.Component {
 
   handlePlantNameChange = plantName => this.setState({ plantName });
   handlePlantSpeciesChange = plantSpeciesQuery => this.setState({ plantSpeciesQuery });
-  handlePlantList = plantList => this.setState({plantList});
+  handlePlantList = plantList => this.setState({plantList:plantList});
   handlePlantData = plantData => {
     const {temperature_minimum, shade_tolerance, precipitation_minimum, precipitation_maximum} = plantData.main_species.growth
     let temperature_minimum_deg = null
@@ -133,6 +134,7 @@ class AddPlantScreen extends React.Component {
         username:global.USERNAME ? global.USERNAME : "admin",
         name:this.state.plantName,
         species:this.state.plantSpecies,
+        photoPath:this.state.plantPicLocation,
         plantPrecipitationMax:this.state.plantPrecipitationMax,
         plantPrecipitationMin:this.state.plantPrecipitationMin,
         plantShadeTolerance:this.state.plantShadeTolerance,
@@ -147,7 +149,19 @@ class AddPlantScreen extends React.Component {
       }
       return data.text()
     })
-    .then(res => console.log(res))
+    .then(res => {
+      console.log(res)
+      this.props.navigation.dispatch(
+        StackActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: "Home"
+            })
+          ]
+        })
+      );
+    })
   }
 
   searchPlant = (plantID) => {
@@ -175,7 +189,7 @@ class AddPlantScreen extends React.Component {
   }
 
   searchPlantsAPI = () => {
-      fetch("https://trefle.io/api/plants?q="+this.state.plantSpecies, {
+      fetch("https://trefle.io/api/plants?q="+this.state.plantSpeciesQuery, {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer '+ 'TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09', 
@@ -213,7 +227,9 @@ class AddPlantScreen extends React.Component {
         allowsEditing: true,
         aspect: [4, 3],
       });
-
+      this.setState({
+        plantPicture: pickerResult.uri
+      });
       this._handleImagePicked(pickerResult);
     }
   };
@@ -249,10 +265,7 @@ class AddPlantScreen extends React.Component {
       if (!pickerResult.cancelled) {
         uploadResponse = await uploadImageAsync(pickerResult.uri);
         uploadResult = await uploadResponse.json();
-        console.log(uploadResult)
-        this.setState({
-          plantPicture: uploadResult.location
-        });
+        this.setState({plantPicLocation:uploadResult.path})
       }
     } catch (e) {
       alert('Upload failed, sorry :(');
