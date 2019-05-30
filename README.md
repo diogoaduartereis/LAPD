@@ -42,10 +42,10 @@ $ node server.js
 
 Notes:
 
-In the backend folder, the .env file defines the PORT where the server will run. 
-In the fronted folder, the App.js file defines the SERVERIP, the address where the backend will be running.
+In the backend folder, the **.env** file defines the **PORT** where the server will run. 
+In the fronted folder, the **App.js** file defines the **SERVERIP**, the address where the backend will be running.
 
-The server will be running on a raspberry pi. A led and the htu21d sensor must be connected. The led is expected to be connected in GPIO port number 18, and this default can be changed in the pump.py file, located in the scripts folder.
+The server will be running on a raspberry pi. A led and the htu21d sensor must be connected. The led is expected to be connected in GPIO port number 18, and this default can be changed in the **pump.py** file, located in the scripts folder.
 
 To run locally, connect both the app and the raspberry pi to the same network. 
 Using ifconfig command on a terminal, the local ip address of the raspberry pi can be found, and used in the app.
