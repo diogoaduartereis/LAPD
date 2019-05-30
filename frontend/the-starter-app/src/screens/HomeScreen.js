@@ -47,7 +47,7 @@ class HomeScreen extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: global.USERNAME,
+          _id: _id,
         }),
       })
       .then(data => {
