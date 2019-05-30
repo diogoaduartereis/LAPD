@@ -119,6 +119,16 @@ class HomeScreen extends React.Component {
     this.fetchPlants();
   }
 
+  processPhotoPath(uripath){
+    if(uripath.includes("backend/uploads")){
+      let parts = uripath.split("/")
+      if(!parts[parts.length-1].includes("jpg"))
+        return global.SERVERIP+"/"+parts[parts.length-1]+".jpg"
+      else return global.SERVERIP+"/"+parts[parts.length-1]
+    }
+    return uripath
+  }
+
   render() {
     if (this.state.showLoading === true) {
       return (
@@ -166,7 +176,7 @@ class HomeScreen extends React.Component {
                     height: 55,
                     margin: 10
                   }}
-                  source={{ uri: item.photoPath }}
+                  source={{ uri: this.processPhotoPath(item.photoPath) }}
                 />
               </TouchableOpacity>
             )}

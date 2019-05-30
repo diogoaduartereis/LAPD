@@ -6,7 +6,9 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const bcrypt = require('bcrypt');
 const multer  = require('multer')
-const upload = multer({ dest: __dirname + '/uploads/' })
+const upload = multer({ dest: __dirname + '/uploads/',filename: function (req, file, cb) {
+  cb(null, Date.now() + '.jpg') //Appending .jpg
+}})
 
 
 /**
