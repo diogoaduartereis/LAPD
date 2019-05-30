@@ -99,8 +99,7 @@ class AddPlantScreen extends React.Component {
             label="Search species"
             onPress={this.searchPlantsAPI}
           />
-          <View>
-           
+          <View>    
             <FlatList
               style = {styles.plantListContainer}
               data={this.state.plantList}
@@ -110,10 +109,7 @@ class AddPlantScreen extends React.Component {
               </TouchableOpacity>
               )}
               />
-  
           </View>
-
-
           <View style={styles.buttonSection}>
             <Button
               style={styles.button}
@@ -125,6 +121,7 @@ class AddPlantScreen extends React.Component {
       </KeyboardAvoidingView>
     );
   }
+
   handleAddPress = () => {
     fetch("http://" + global.SERVERIP + "/api/addPlant", {
       method: 'POST',
@@ -242,22 +239,6 @@ class AddPlantScreen extends React.Component {
     );
   };
 
-  _pickImage = async () => {
-    const {
-      status: cameraRollPerm
-    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    // only if user allows permission to camera roll
-    if (cameraRollPerm === 'granted') {
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-      });
-
-      this._handleImagePicked(pickerResult);
-    }
-  };
-
   _handleImagePicked = async pickerResult => {
     let uploadResponse, uploadResult;
 
@@ -269,7 +250,7 @@ class AddPlantScreen extends React.Component {
       if (!pickerResult.cancelled) {
         uploadResponse = await uploadImageAsync(pickerResult.uri);
         uploadResult = await uploadResponse.json();
-
+        console.log(uploadResult)
         this.setState({
           plantPicture: uploadResult.location
         });
@@ -288,14 +269,15 @@ class AddPlantScreen extends React.Component {
 }
 
 async function uploadImageAsync(uri) {
-  let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
+  let apiUrl = "http://" + global.SERVERIP + "/api/uploadPlantImage";
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
 
   let formData = new FormData();
+  console.log(uri)
   formData.append('photo', {
-    uri,
+    uri:uri,
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
   });
@@ -308,7 +290,6 @@ async function uploadImageAsync(uri) {
       'Content-Type': 'multipart/form-data',
     },
   };
-
   return fetch(apiUrl, options);
 }
 
