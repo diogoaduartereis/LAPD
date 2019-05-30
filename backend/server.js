@@ -6,11 +6,15 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const bcrypt = require('bcrypt');
 const multer  = require('multer')
-const upload = multer({ dest: __dirname + '/uploads/',filename: function (req, file, cb) {
-  cb(null, Date.now() + '.jpg') //Appending .jpg
-}})
-
-
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, __dirname + '/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+  }
+})
+const upload = multer({ storage: storage });
 /**
  * Database and models
  */ 

@@ -56,7 +56,7 @@ class AddPlantScreen extends React.Component {
       plantPrecipitationMax:precipitation_maximum_val,
       plantPrecipitationMin:precipitation_minimum_val,
       plantCommonName:plantData.common_name,
-      plantSpecies:plantData.scientific_name
+      plantSpecies:plantData.scientific_name ? plantData.scientific_name : "unknown"
     })
   }
 
