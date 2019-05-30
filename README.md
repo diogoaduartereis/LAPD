@@ -7,7 +7,7 @@ In the source folder, there are different folders for the frontend and backend o
 
 #### 1) Frontend #### 
 
-On the first run, in the frontend folder, you must install the dependencies:
+On the first run, in the frontend/the-starter-app folder, you must install the dependencies:
 
 ```shell
 $ npm install
