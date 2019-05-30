@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import sys
 import time
+print "LED on"
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(18,GPIO.OUT)

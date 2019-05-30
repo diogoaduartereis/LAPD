@@ -204,15 +204,6 @@ router.post('/comparePW', async (req, res) => {
 }
 });
 
-/**
- * Pump activation python script
- */
-function runPumpScript(plant) {
-  PythonShell.run('my_script.py', null, function (err) {
-    if (err) throw err;
-    console.log('finished');
-  });
-}
 
 /**
  * Receive get to activate pump
@@ -223,7 +214,7 @@ router.get('/activatePump', async (req, res) => {
     var spawn = require('child_process').spawn;
     var process = spawn('python', ['./scripts/pump.py']);
   process.stdout.on('data', function (data) {
-    console.log(data);
+    console.log(data.toString('utf8'));
   });
 });
 
