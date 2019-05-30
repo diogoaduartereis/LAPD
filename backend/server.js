@@ -5,7 +5,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const bcrypt = require('bcrypt');
-const multer  = require('multer')
+const multer  = require('multer');
+var path = require('path');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, __dirname + '/uploads/')
@@ -15,7 +16,7 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({ storage: storage });
-/**
+/**x\
  * Database and models
  */ 
 const dataModel = require("./models");
