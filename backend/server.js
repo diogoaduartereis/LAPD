@@ -213,12 +213,10 @@ router.get('/activatePump', async (req, res) => {
     var process = spawn('python', ['./scripts/pump.py']);
     process.stdout.on('data', function (data) {
       console.log(data.toString());
-      console.log(data.toString() =='Shutdown');
-      if(data.toString() === "Shutdown") {
-        console.log("oi");
-        res.status(200).send('Activated and deactivated pump');
-      }
-  });
+    });
+    process.stderr.on('close', () => {
+    	res.status(200).send('Pump activation signal sent');
+    });
 });
 
 // Development Testing Routes
