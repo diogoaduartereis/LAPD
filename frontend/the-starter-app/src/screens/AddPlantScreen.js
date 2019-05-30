@@ -30,6 +30,7 @@ class AddPlantScreen extends React.Component {
       plantSpeciesQuery: "",
       plantCommonName:"",
       plantPicture: null,
+      plantPicLocation: null,
       uploading: false,
       plantList: [],
     };
@@ -37,7 +38,7 @@ class AddPlantScreen extends React.Component {
 
   handlePlantNameChange = plantName => this.setState({ plantName });
   handlePlantSpeciesChange = plantSpeciesQuery => this.setState({ plantSpeciesQuery });
-  handlePlantList = plantList => this.setState({plantList});
+  handlePlantList = plantList => this.setState({plantList:plantList});
   handlePlantData = plantData => {
     const {temperature_minimum, shade_tolerance, precipitation_minimum, precipitation_maximum} = plantData.main_species.growth
     let temperature_minimum_deg = null
@@ -99,8 +100,7 @@ class AddPlantScreen extends React.Component {
             label="Search species"
             onPress={this.searchPlantsAPI}
           />
-          <View>
-           
+          <View>    
             <FlatList
               style = {styles.plantListContainer}
               data={this.state.plantList}
@@ -110,10 +110,7 @@ class AddPlantScreen extends React.Component {
               </TouchableOpacity>
               )}
               />
-  
           </View>
-
-
           <View style={styles.buttonSection}>
             <Button
               style={styles.button}
@@ -125,6 +122,7 @@ class AddPlantScreen extends React.Component {
       </KeyboardAvoidingView>
     );
   }
+
   handleAddPress = () => {
     fetch("http://" + global.SERVERIP + "/api/addPlant", {
       method: 'POST',
@@ -136,6 +134,7 @@ class AddPlantScreen extends React.Component {
         username:global.USERNAME ? global.USERNAME : "admin",
         name:this.state.plantName,
         species:this.state.plantSpecies,
+        photoPath:this.state.plantPicLocation,
         plantPrecipitationMax:this.state.plantPrecipitationMax,
         plantPrecipitationMin:this.state.plantPrecipitationMin,
         plantShadeTolerance:this.state.plantShadeTolerance,
@@ -150,7 +149,19 @@ class AddPlantScreen extends React.Component {
       }
       return data.text()
     })
-    .then(res => console.log(res))
+    .then(res => {
+      console.log(res)
+      this.props.navigation.dispatch(
+        StackActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: "Home"
+            })
+          ]
+        })
+      );
+    })
   }
 
   searchPlant = (plantID) => {
@@ -178,7 +189,7 @@ class AddPlantScreen extends React.Component {
   }
 
   searchPlantsAPI = () => {
-      fetch("https://trefle.io/api/plants?q="+this.state.plantSpecies, {
+      fetch("https://trefle.io/api/plants?q="+this.state.plantSpeciesQuery, {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer '+ 'TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09', 
@@ -202,7 +213,6 @@ class AddPlantScreen extends React.Component {
   }
 
   _takePhoto = async () => {
-    console.log("inside take photo");
     const {
       status: cameraPerm
     } = await Permissions.askAsync(Permissions.CAMERA);
@@ -217,7 +227,9 @@ class AddPlantScreen extends React.Component {
         allowsEditing: true,
         aspect: [4, 3],
       });
-
+      this.setState({
+        plantPicture: pickerResult.uri
+      });
       this._handleImagePicked(pickerResult);
     }
   };
@@ -242,22 +254,6 @@ class AddPlantScreen extends React.Component {
     );
   };
 
-  _pickImage = async () => {
-    const {
-      status: cameraRollPerm
-    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    // only if user allows permission to camera roll
-    if (cameraRollPerm === 'granted') {
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-      });
-
-      this._handleImagePicked(pickerResult);
-    }
-  };
-
   _handleImagePicked = async pickerResult => {
     let uploadResponse, uploadResult;
 
@@ -269,15 +265,9 @@ class AddPlantScreen extends React.Component {
       if (!pickerResult.cancelled) {
         uploadResponse = await uploadImageAsync(pickerResult.uri);
         uploadResult = await uploadResponse.json();
-
-        this.setState({
-          plantPicture: uploadResult.location
-        });
+        this.setState({plantPicLocation:uploadResult.path})
       }
     } catch (e) {
-      console.log({ uploadResponse });
-      console.log({ uploadResult });
-      console.log({ e });
       alert('Upload failed, sorry :(');
     } finally {
       this.setState({
@@ -288,13 +278,13 @@ class AddPlantScreen extends React.Component {
 }
 
 async function uploadImageAsync(uri) {
-  let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
+  let apiUrl = "http://" + global.SERVERIP + "/api/uploadPlantImage";
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
 
   let formData = new FormData();
-  formData.append('photo', {
+  formData.append('file',{
     uri,
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
@@ -308,7 +298,6 @@ async function uploadImageAsync(uri) {
       'Content-Type': 'multipart/form-data',
     },
   };
-
   return fetch(apiUrl, options);
 }
 

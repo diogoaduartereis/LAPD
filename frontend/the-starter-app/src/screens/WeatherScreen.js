@@ -114,7 +114,7 @@ class WeatherScreen extends React.Component {
                                     source={{ uri: "https://openweathermap.org/img/w/" + firstElement.weather[0].icon + ".png" }}
                                     style={{ width: 150, height: 150, left: 50 }}
                                 />
-                                <Text style={{ fontSize: 20, fontWeight: "bold", bottom: 40 }}>{firstElement.main.temp} K</Text>
+                                <Text style={{ fontSize: 20, fontWeight: "bold", bottom: 40 }}>{firstElement.main.temp} °C</Text>
                                 <Text style={{ fontSize: 15, bottom: 20 }}>{firstElement.weather[0].description}</Text>
 
                             </View>
@@ -169,7 +169,7 @@ class WeatherScreen extends React.Component {
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <Image style={{ width: 75, height: 75 }} source={{ uri: "https://openweathermap.org/img/w/" + item.weather[0].icon + ".png" }} />
                                         <Text> {Moment(item.dt_txt).calendar()}</Text>
-                                        <Text> {item.main.temp} K</Text>
+                                        <Text> {item.main.temp} °C</Text>
 
                                     </View>
                                     <Divider style={{ backgroundColor: '#dfe6e9', marginVertical: 10 }} />
