@@ -5,13 +5,26 @@ import Button from "../../components/Button";
 import colors from "../../config/colors";
 
 class Status extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      plant: {}
+    };
+  }
+
+  componentWillMount() {
+    this.setState({
+      plant: this.props.plant,
+    })
+  }
+
   render() {
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Image
           source={{
             uri:
-              "https://mashtalegypt.com/wp-content/uploads/2017/05/update-1.png"
+              this.state.plant.photoPath
           }}
           style={{
             marginTop: 40,

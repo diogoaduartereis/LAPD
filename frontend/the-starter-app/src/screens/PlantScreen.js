@@ -25,6 +25,7 @@ class PlantScreen extends React.Component {
     super(props);
     this.state = {
       data: [],
+      plant: {}
     };
   }
 
@@ -56,8 +57,26 @@ class PlantScreen extends React.Component {
   }
 
   componentWillMount() {
+    let plant = this.props.navigation.state.params.plant;
+    let photoPath = this.processPhotoPath(plant.photoPath);
+    if(photoPath === null) photoPath = "https://mashtalegypt.com/wp-content/uploads/2017/05/update-1.png"
+    plant.photoPath = photoPath;
+    this.setState({
+      plant: plant,
+    })
     this.props.navigation.setParams({handleSettingsPress: this.handleSettingsPress.bind(this)});
     this.getData();
+    
+  }
+
+  processPhotoPath(uripath){
+    if(uripath.includes("backend/uploads")){
+      let parts = uripath.split("/")
+      if(!parts[parts.length-1].includes("jpg"))
+        return "http://"+global.SERVERIP+"/"+parts[parts.length-1]+".jpg"
+      return "http://"+global.SERVERIP+"/"+parts[parts.length-1]
+    }
+    return uripath
   }
 
   handleSettingsPress() {
@@ -78,7 +97,7 @@ class PlantScreen extends React.Component {
             style={styles.bgImage}
             source={require("../assets/images/background4.png")}
           />
-          <Status />
+          <Status plant={this.state.plant} />
         </View>
         <View tabLabel="Readings" style={styles.container}>
           <Image
