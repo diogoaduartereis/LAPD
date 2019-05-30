@@ -24,7 +24,7 @@ The expo tool will be started, and the project can be scanned with the provided 
 It is also possible to run on an Android or iOS simulator.
 
 
-#### 1) Backend #### 
+#### 2) Backend #### 
 
 On the first run, in the backend folder, you must install the dependencies:
 
@@ -40,7 +40,7 @@ $ node server.js
 ```
 
 
-Notes:
+#### Notes: #### 
 
 In the backend folder, the **.env** file defines the **PORT** where the server will run. 
 In the fronted folder, the **App.js** file defines the **SERVERIP**, the address where the backend will be running.
