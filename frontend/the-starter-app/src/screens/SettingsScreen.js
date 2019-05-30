@@ -86,9 +86,8 @@ class SettingsScreen extends React.Component {
           return;
         }
         else {
-          console.log(data);
           this.setState({
-            errorMsg: "There was en error updating the password",
+            errorMsg: data._bodyText,
             succMsg: "",
             loading: false,
           })

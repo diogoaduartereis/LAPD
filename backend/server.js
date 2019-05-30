@@ -191,13 +191,9 @@ router.post('/comparePW', async (req, res) => {
   let response = await User.findOne({ username: req.body.username})
   if(response) {
     if(compareHash(req.body.oldPassword, response.password)) {
-      bcrypt.genSalt(saltRounds, function(err, salt) {
-        bcrypt.hash(req.body.newpassword, salt, async function(err, hash) {
-            hashedPW = hash;
-            await User.updateOne({ username: req.body.username}, {password:hashedPW})
-            res.status(200).send('Successfully Updated Password');
-          });
-        });
+      let hashedPW = bcrypt.hashSync(req.body.password, 10);
+      await User.updateOne({ username: req.body.username}, {password:hashedPW})
+      res.status(200).send('Successfully Updated Password');
     }
     else {
       res.status(400).send('Incorrect old password');
