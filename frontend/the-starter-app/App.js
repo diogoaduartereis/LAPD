@@ -7,6 +7,7 @@ import PlantScreen from "./src/screens/PlantScreen";
 import WeatherScreen from "./src/screens/WeatherScreen";
 import AddPlantScreen from "./src/screens/AddPlantScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
+import Button from "./src/components/Button";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -46,7 +47,7 @@ const AppNavigator = createStackNavigator(
         headerTintColor: "white",
         headerStyle: {
           backgroundColor: colors.GREEN2
-        }
+        },
       }
     },
 
@@ -90,7 +91,7 @@ const AppNavigator = createStackNavigator(
 }  ,
 
   {
-    initialRouteName: "Settings"
+    initialRouteName: "Login"
   }
 );
 

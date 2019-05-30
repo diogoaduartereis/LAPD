@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, Text, Platform } from "react-native";
 import ScrollableTabView, {
   DefaultTabBar
 } from "react-native-scrollable-tab-view";
@@ -7,6 +7,16 @@ import colors from "../config/colors";
 import Readings from "../components/plant/Readings";
 import Status from "../components/plant/Status";
 import Tips from "../components/plant/Tips";
+import Button from "../components/Button";
+import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
+import { Ionicons } from '@expo/vector-icons';
+
+const IoniconsHeaderButton = passMeFurther => (
+  // the `passMeFurther` variable here contains props from <Item .../> as well as <HeaderButtons ... />
+  // and it is important to pass those props to `HeaderButton`
+  // then you may add some information like icon size or color (if you use icons)
+  <HeaderButton {...passMeFurther} IconComponent={Ionicons} iconSize={23} color="blue" />
+);
 
 
 class PlantScreen extends React.Component {
@@ -17,16 +27,21 @@ class PlantScreen extends React.Component {
     };
   }
 
-  static navigationOptions = ({ navigation }) => ({
-    title: `${
-      navigation.state.params && navigation.state.params.title
-        ? navigation.state.params.title
-        : "Plant"
-    }`,
-    headerStyle: {
-      backgroundColor: "white"
-    },
-  });
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      title:  navigation.state.params.title,
+      headerRight: (
+        <Ionicons 
+          name={Platform.OS === "ios" ? "ios-notifications" : "md-notifications"}
+          size={25}
+        />
+      ),
+      headerStyle: {
+        backgroundColor: "white"
+      },
+    }
+  };
 
   getData() {
     setTimeout(() => {
@@ -39,7 +54,12 @@ class PlantScreen extends React.Component {
   }
 
   componentWillMount() {
+    this.props.navigation.setParams({handleSettingsPress: this.handleSettingsPress.bind(this)});
     this.getData();
+  }
+
+  handleSettingsPress() {
+    
   }
 
   render() {
@@ -51,10 +71,6 @@ class PlantScreen extends React.Component {
         tabBarUnderlineStyle={{ backgroundColor: colors.GREEN2, height: 3 }}
         renderTabBar={() => <DefaultTabBar />}
       >
-      <Button
-        title="Settings"
-        onPress={() => navigation.navigate("Settings")}
-      />
         <View style={styles.container} tabLabel="Status">
           <Image
             style={styles.bgImage}
@@ -94,6 +110,11 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     opacity: 0.4
+  },
+
+  settings: {
+    color:"white",
+    fontWeight: "bold",
   }
 });
 
