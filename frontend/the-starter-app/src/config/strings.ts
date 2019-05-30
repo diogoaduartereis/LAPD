@@ -6,6 +6,7 @@ const strings = {
   CONFIRMPASSWORD_PLACEHOLDER: "Confirm Password",
   USERNAME_PLACEHOLDER: "Username",
   REFRESH_PLACEHOLDER: "Refresh",
+  SETTINGS_PLACEHOLDER: "Settings",
 };
 
 export default strings;

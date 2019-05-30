@@ -10,6 +10,7 @@ import Tips from "../components/plant/Tips";
 import Button from "../components/Button";
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 import { Ionicons } from '@expo/vector-icons';
+import strings from "../config/strings";
 
 const IoniconsHeaderButton = passMeFurther => (
   // the `passMeFurther` variable here contains props from <Item .../> as well as <HeaderButtons ... />
@@ -32,10 +33,11 @@ class PlantScreen extends React.Component {
     return {
       title:  navigation.state.params.title,
       headerRight: (
-        <Ionicons 
-          name={Platform.OS === "ios" ? "ios-notifications" : "md-notifications"}
-          size={25}
-        />
+        <Button 
+          style={styles.settingsButton}
+          label={strings.SETTINGS_PLACEHOLDER}
+          onPress={() => params.handleSettingsPress()}
+        /> 
       ),
       headerStyle: {
         backgroundColor: "white"
@@ -59,7 +61,7 @@ class PlantScreen extends React.Component {
   }
 
   handleSettingsPress() {
-    
+    this.props.navigation.navigate("Settings");
   }
 
   render() {
@@ -112,10 +114,18 @@ const styles = StyleSheet.create({
     opacity: 0.4
   },
 
-  settings: {
-    color:"white",
-    fontWeight: "bold",
-  }
+  settingsButton: {
+    backgroundColor: colors.GREEN,
+    shadowColor: "#808080",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    marginVertical: 20,
+    width: 90,
+  },
 });
 
 export default PlantScreen;
