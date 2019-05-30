@@ -11,5 +11,6 @@ time.sleep(1)
 print "LED off"
 sys.stdout.flush()
 GPIO.output(18,GPIO.LOW)
+time.sleep(1)
 print "Shutdown"
 sys.stdout.flush()
