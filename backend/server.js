@@ -5,11 +5,18 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const bcrypt = require('bcrypt');
-const multer  = require('multer')
-const upload = multer({ dest: __dirname + '/uploads/' })
-
-
-/**
+const multer  = require('multer');
+var path = require('path');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, __dirname + '/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+  }
+})
+const upload = multer({ storage: storage });
+/**x\
  * Database and models
  */ 
 const dataModel = require("./models");
@@ -30,7 +37,7 @@ const sensor1 = require("./htu21d/sensor");
 const app = express();
 app.use(cors());
 app.use(logger("dev"));
-
+app.use(express.static('uploads'))
 const router = express.Router();
 
 
