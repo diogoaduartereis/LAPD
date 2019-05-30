@@ -6,7 +6,6 @@ import colors from "../../config/colors";
 
 class Tips extends React.Component {
   render() {
-
     const { plant, navigation } = this.props;
 
     return (
@@ -28,13 +27,11 @@ class Tips extends React.Component {
           <Button
             style={[styles.waterButton, { backgroundColor: colors.YELLOW }]}
             label="Know more"
-            onPress={() =>
-                navigation.navigate("Tips", {plant:plant})
-              }
+            onPress={() => navigation.navigate("Tips", { plant: plant })}
           />
         </View>
 
-        <View style={[styles.line, {marginBottom:30}]} />
+        <View style={[styles.line, { marginBottom: 30 }]} />
 
         <Text style={{ fontWeight: "bold", lineHeight: 15 }}>Weather</Text>
 
@@ -53,9 +50,7 @@ class Tips extends React.Component {
           <Button
             style={[styles.waterButton, { backgroundColor: colors.BLUE }]}
             label="See weather"
-            onPress={() =>
-                navigation.navigate("Weather")
-              }
+            onPress={() => navigation.navigate("Weather")}
           />
         </View>
       </View>
@@ -111,7 +106,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.6,
     alignSelf: "stretch",
     width: "100%",
-    marginVertical: 20,
+    marginVertical: 20
   }
 });
 

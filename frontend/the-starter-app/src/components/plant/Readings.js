@@ -10,34 +10,35 @@ class Readings extends React.Component {
     super(props);
     this.state = {
       temperature: 0,
-      humidity: 0,
+      humidity: 0
     };
   }
 
   handleRefreshPress = () => {
-      setTimeout(() => {
-        fetch("http://" + global.SERVERIP + "/api/getSensor")
-          .then(data => data.json())
-          .then(res => {
-            this.setState({ 
-              temperature: res.data.temperature,
-              humidity: res.data.humidity,
-            });
+    setTimeout(() => {
+      fetch("http://" + global.SERVERIP + "/api/getSensor")
+        .then(data => data.json())
+        .then(res => {
+          this.setState({
+            temperature: res.data.temperature,
+            humidity: res.data.humidity
           });
-      }, 3000);
-  }
+        });
+    }, 3000);
+  };
 
   componentDidMount() {
-    const temperature = this.props.data.temperature ? this.props.data.temperature : 0;
+    const temperature = this.props.data.temperature
+      ? this.props.data.temperature
+      : 0;
     const humidity = this.props.data.humidity ? this.props.data.humidity : 0;
-    if(!temperature || !humidity) {
+    if (!temperature || !humidity) {
       this.handleRefreshPress();
-    }
-    else {
+    } else {
       this.setState({
         temperature: temperature,
-        humidity: humidity,
-      })
+        humidity: humidity
+      });
     }
   }
 
@@ -49,8 +50,14 @@ class Readings extends React.Component {
         </Text>
 
         <View style={{ alignItems: "center" }}>
-          <PercentageCircle radius={60} percent={this.state.temperature} color={"#F2988F"}>
-            <Text style={{ fontSize: 20, color: "#F2988F" }}>{this.state.temperature}</Text>
+          <PercentageCircle
+            radius={60}
+            percent={this.state.temperature}
+            color={"#F2988F"}
+          >
+            <Text style={{ fontSize: 20, color: "#F2988F" }}>
+              {this.state.temperature}
+            </Text>
             <Text style={{ fontSize: 12, color: "#999" }}>ºC</Text>
           </PercentageCircle>
           <Text style={{ paddingTop: 10 }}> {this.state.temperature}ºC</Text>
@@ -63,21 +70,26 @@ class Readings extends React.Component {
         </Text>
 
         <View style={{ alignItems: "center" }}>
-          <PercentageCircle radius={60} percent={this.state.humidity} color={"#F2988F"}>
-            <Text style={{ fontSize: 20, color: "#F2988F" }}>{this.state.humidity}</Text>
+          <PercentageCircle
+            radius={60}
+            percent={this.state.humidity}
+            color={"#F2988F"}
+          >
+            <Text style={{ fontSize: 20, color: "#F2988F" }}>
+              {this.state.humidity}
+            </Text>
             <Text style={{ fontSize: 12, color: "#999" }}>RH</Text>
           </PercentageCircle>
           <Text style={{ paddingTop: 10 }}> {this.state.humidity}RH</Text>
         </View>
 
         <View style={styles.refreshButtonSection}>
-            <Button
-              style={styles.refreshButton}
-              label={strings.REFRESH_PLACEHOLDER}
-              onPress={this.handleRefreshPress}
-            />
-          </View>
-
+          <Button
+            style={styles.refreshButton}
+            label={strings.REFRESH_PLACEHOLDER}
+            onPress={this.handleRefreshPress}
+          />
+        </View>
       </View>
     );
   }
@@ -88,8 +100,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop:50,
-    marginBottom:10
+    marginTop: 50,
+    marginBottom: 10
   },
 
   card: {
@@ -111,11 +123,8 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 6,
- 
-  },
+    shadowRadius: 6
+  }
 });
 
 export default Readings;
-
- 

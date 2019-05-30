@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Image, StyleSheet, View, Text, Platform } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import ScrollableTabView, {
   DefaultTabBar
 } from "react-native-scrollable-tab-view";
@@ -8,17 +8,24 @@ import Readings from "../components/plant/Readings";
 import Status from "../components/plant/Status";
 import Tips from "../components/plant/Tips";
 import Button from "../components/Button";
-import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
-import { Ionicons } from '@expo/vector-icons';
+import HeaderButtons, {
+  HeaderButton,
+  Item
+} from "react-navigation-header-buttons";
+import { Ionicons } from "@expo/vector-icons";
 import strings from "../config/strings";
 
 const IoniconsHeaderButton = passMeFurther => (
   // the `passMeFurther` variable here contains props from <Item .../> as well as <HeaderButtons ... />
   // and it is important to pass those props to `HeaderButton`
   // then you may add some information like icon size or color (if you use icons)
-  <HeaderButton {...passMeFurther} IconComponent={Ionicons} iconSize={23} color="blue" />
+  <HeaderButton
+    {...passMeFurther}
+    IconComponent={Ionicons}
+    iconSize={23}
+    color="blue"
+  />
 );
-
 
 class PlantScreen extends React.Component {
   constructor(props) {
@@ -32,18 +39,18 @@ class PlantScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
-      title:  navigation.state.params.title,
+      title: navigation.state.params.title,
       headerRight: (
-        <Button 
+        <Button
           style={styles.settingsButton}
           label={strings.SETTINGS_PLACEHOLDER}
           onPress={() => params.handleSettingsPress()}
-        /> 
+        />
       ),
       headerStyle: {
         backgroundColor: "white"
-      },
-    }
+      }
+    };
   };
 
   getData() {
@@ -59,24 +66,29 @@ class PlantScreen extends React.Component {
   componentWillMount() {
     let plant = this.props.navigation.state.params.plant;
     let photoPath = this.processPhotoPath(plant.photoPath);
-    if(photoPath === null) photoPath = "https://mashtalegypt.com/wp-content/uploads/2017/05/update-1.png"
+    if (photoPath === null)
+      photoPath =
+        "https://mashtalegypt.com/wp-content/uploads/2017/05/update-1.png";
     plant.photoPath = photoPath;
     this.setState({
-      plant: plant,
-    })
-    this.props.navigation.setParams({handleSettingsPress: this.handleSettingsPress.bind(this)});
+      plant: plant
+    });
+    this.props.navigation.setParams({
+      handleSettingsPress: this.handleSettingsPress.bind(this)
+    });
     this.getData();
-    
   }
 
-  processPhotoPath(uripath){
-    if(uripath.includes("backend/uploads")){
-      let parts = uripath.split("/")
-      if(!parts[parts.length-1].includes("jpg"))
-        return "http://"+global.SERVERIP+"/"+parts[parts.length-1]+".jpg"
-      return "http://"+global.SERVERIP+"/"+parts[parts.length-1]
+  processPhotoPath(uripath) {
+    if (uripath.includes("backend/uploads")) {
+      let parts = uripath.split("/");
+      if (!parts[parts.length - 1].includes("jpg"))
+        return (
+          "http://" + global.SERVERIP + "/" + parts[parts.length - 1] + ".jpg"
+        );
+      return "http://" + global.SERVERIP + "/" + parts[parts.length - 1];
     }
-    return uripath
+    return uripath;
   }
 
   handleSettingsPress() {
@@ -88,7 +100,7 @@ class PlantScreen extends React.Component {
     return (
       <ScrollableTabView
         initialPage={0}
-        style={{marginTop:10}}
+        style={{ marginTop: 10 }}
         tabBarUnderlineStyle={{ backgroundColor: colors.GREEN2, height: 3 }}
         renderTabBar={() => <DefaultTabBar />}
       >
@@ -120,8 +132,7 @@ class PlantScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-
+    flex: 1
   },
 
   bgImage: {
@@ -143,8 +154,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     marginVertical: 20,
-    width: 90,
-  },
+    width: 90
+  }
 });
 
 export default PlantScreen;

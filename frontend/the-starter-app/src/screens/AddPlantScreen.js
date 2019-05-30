@@ -4,18 +4,18 @@ import {
   Image,
   StyleSheet,
   View,
-  TouchableOpacity, 
+  TouchableOpacity,
   FlatList,
   Text
 } from "react-native";
 import Button from "../components/Button";
 import FormTextInput from "../components/FormTextInput";
 import { NavigationActions, StackActions } from "react-navigation";
-import { ImagePicker, Permissions } from 'expo';
+import { ImagePicker, Permissions } from "expo";
 import colors from "../config/colors";
 import imageBackground from "../assets/images/background4.png";
 import placeholderImage from "../assets/images/uploadPlaceholder.png";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import strings from "../config/strings";
 
 class AddPlantScreen extends React.Component {
@@ -23,17 +23,17 @@ class AddPlantScreen extends React.Component {
     super(props);
     this.state = {
       plantName: "",
-      plantMinTemperature:0,
-      plantShadeTolerance:"",
-      plantPrecipitationMax:0,
-      plantPrecipitationMin:0,
+      plantMinTemperature: 0,
+      plantShadeTolerance: "",
+      plantPrecipitationMax: 0,
+      plantPrecipitationMin: 0,
       plantSpecies: "",
       plantSpeciesQuery: "",
-      plantCommonName:"",
+      plantCommonName: "",
       plantPicture: null,
       plantPicLocation: null,
       uploading: false,
-      plantList: [],
+      plantList: []
     };
   }
 
@@ -41,17 +41,19 @@ class AddPlantScreen extends React.Component {
     const { params = {} } = navigation.state;
     return {
       headerRight: (
-        <Button 
+        <Button
           style={styles.settingsButton}
           label={strings.SETTINGS_PLACEHOLDER}
           onPress={() => params.handleSettingsPress()}
-        /> 
-      ),
-    }
+        />
+      )
+    };
   };
 
   componentWillMount() {
-    this.props.navigation.setParams({handleSettingsPress: this.handleSettingsPress.bind(this)});
+    this.props.navigation.setParams({
+      handleSettingsPress: this.handleSettingsPress.bind(this)
+    });
   }
 
   handleSettingsPress() {
@@ -59,38 +61,44 @@ class AddPlantScreen extends React.Component {
   }
 
   handlePlantNameChange = plantName => this.setState({ plantName });
-  handlePlantSpeciesChange = plantSpeciesQuery => this.setState({ plantSpeciesQuery });
-  handlePlantList = plantList => this.setState({plantList:plantList});
+  handlePlantSpeciesChange = plantSpeciesQuery =>
+    this.setState({ plantSpeciesQuery });
+  handlePlantList = plantList => this.setState({ plantList: plantList });
   handlePlantData = plantData => {
-    const {temperature_minimum, shade_tolerance, precipitation_minimum, precipitation_maximum} = plantData.main_species.growth
-    let temperature_minimum_deg = null
-    let precipitation_maximum_val = null
-    let precipitation_minimum_val = null
-    if(temperature_minimum)
-      temperature_minimum_deg = temperature_minimum.deg_c
-    if(precipitation_maximum)
-      precipitation_maximum_val = precipitation_maximum.cm
-    if(precipitation_minimum)
-      precipitation_minimum_val = precipitation_minimum.cm
+    const {
+      temperature_minimum,
+      shade_tolerance,
+      precipitation_minimum,
+      precipitation_maximum
+    } = plantData.main_species.growth;
+    let temperature_minimum_deg = null;
+    let precipitation_maximum_val = null;
+    let precipitation_minimum_val = null;
+    if (temperature_minimum)
+      temperature_minimum_deg = temperature_minimum.deg_c;
+    if (precipitation_maximum)
+      precipitation_maximum_val = precipitation_maximum.cm;
+    if (precipitation_minimum)
+      precipitation_minimum_val = precipitation_minimum.cm;
     this.setState({
-      plantMinTemperature:temperature_minimum_deg,
-      plantShadeTolerance:shade_tolerance,
-      plantPrecipitationMax:precipitation_maximum_val,
-      plantPrecipitationMin:precipitation_minimum_val,
-      plantCommonName:plantData.common_name,
-      plantSpecies:plantData.scientific_name ? plantData.scientific_name : "unknown"
-    })
-  }
+      plantMinTemperature: temperature_minimum_deg,
+      plantShadeTolerance: shade_tolerance,
+      plantPrecipitationMax: precipitation_maximum_val,
+      plantPrecipitationMin: precipitation_minimum_val,
+      plantCommonName: plantData.common_name,
+      plantSpecies: plantData.scientific_name
+        ? plantData.scientific_name
+        : "unknown"
+    });
+  };
 
   render() {
-    let {
-      plantPicture
-    } = this.state;
+    let { plantPicture } = this.state;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Image style={styles.bgImage} source={imageBackground} />
 
-        <TouchableOpacity activeOpacity={.5} onPress={this._takePhoto}>
+        <TouchableOpacity activeOpacity={0.5} onPress={this._takePhoto}>
           {this._maybeRenderImage()}
         </TouchableOpacity>
 
@@ -110,28 +118,29 @@ class AddPlantScreen extends React.Component {
             returnKeyType="done"
           />
           <Button
-            icon={
-              <Ionicons
-                name="md-search"
-                size={15}
-                color="white"
-              />
-            }
+            icon={<Ionicons name="md-search" size={15} color="white" />}
             iconRight
             style={styles.button}
             label="Search species"
             onPress={this.searchPlantsAPI}
           />
-          <View>    
+          <View>
             <FlatList
-              style = {styles.plantListContainer}
+              style={styles.plantListContainer}
               data={this.state.plantList}
-              renderItem={({item,i}) => (
-              <TouchableOpacity key={i} onPress={()=>this.searchPlant(item.id)} >
-                <Text style={styles.plant} >{item.common_name ? item.common_name + " - " + item.scientific_name : item.scientific_name}</Text>
-              </TouchableOpacity>
+              renderItem={({ item, i }) => (
+                <TouchableOpacity
+                  key={i}
+                  onPress={() => this.searchPlant(item.id)}
+                >
+                  <Text style={styles.plant}>
+                    {item.common_name
+                      ? item.common_name + " - " + item.scientific_name
+                      : item.scientific_name}
+                  </Text>
+                </TouchableOpacity>
               )}
-              />
+            />
           </View>
           <View style={styles.buttonSection}>
             <Button
@@ -147,110 +156,112 @@ class AddPlantScreen extends React.Component {
 
   handleAddPress = () => {
     fetch("http://" + global.SERVERIP + "/api/addPlant", {
-      method: 'POST',
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        username:global.USERNAME ? global.USERNAME : "admin",
-        name:this.state.plantName,
-        species:this.state.plantSpecies,
-        photoPath:this.state.plantPicLocation,
-        plantPrecipitationMax:this.state.plantPrecipitationMax,
-        plantPrecipitationMin:this.state.plantPrecipitationMin,
-        plantShadeTolerance:this.state.plantShadeTolerance,
-        plantMinTemperature:this.state.plantMinTemperature
-      }),
-    })
-    .then(data => {
-      if(data.status != 200) {
-        this.setState({
-          errorMsg: data._bodyText,
-        })
-      }
-      return data.text()
-    })
-    .then(res => {
-      console.log(res)
-      this.props.navigation.dispatch(
-        StackActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({
-              routeName: "Home",
-              params: { username: global.USERNAME ? global.USERNAME : "admin" }
-            })
-          ]
-        })
-      );
-    })
-  }
-
-  searchPlant = (plantID) => {
-    fetch("https://trefle.io/api/plants/"+plantID, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer '+ 'c29CNlpKeENqMUsrbmIvNlhIRExMdz09', 
-        'Content-Type': 'application/json',
-      }
-    })
-    .then(data => {
-      if(data.status != 200) {
-        this.setState({
-          errorMsg: data._bodyText
-        })
-      }
-      return data.json()
-    })
-    .then(json => {
-      this.handlePlantData(json)
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }
-
-  searchPlantsAPI = () => {
-      fetch("https://trefle.io/api/plants?q="+this.state.plantSpeciesQuery, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer '+ 'c29CNlpKeENqMUsrbmIvNlhIRExMdz09', 
-          'Content-Type': 'application/json',
-        }
+        username: global.USERNAME ? global.USERNAME : "admin",
+        name: this.state.plantName,
+        species: this.state.plantSpecies,
+        photoPath: this.state.plantPicLocation,
+        plantPrecipitationMax: this.state.plantPrecipitationMax,
+        plantPrecipitationMin: this.state.plantPrecipitationMin,
+        plantShadeTolerance: this.state.plantShadeTolerance,
+        plantMinTemperature: this.state.plantMinTemperature
       })
+    })
       .then(data => {
-        console.log(data)
-
-        if(data.status != 200) {
+        if (data.status != 200) {
           this.setState({
             errorMsg: data._bodyText
-          })
+          });
         }
-        return data.json()
+        return data.text();
+      })
+      .then(res => {
+        console.log(res);
+        this.props.navigation.dispatch(
+          StackActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Home",
+                params: {
+                  username: global.USERNAME ? global.USERNAME : "admin"
+                }
+              })
+            ]
+          })
+        );
+      });
+  };
+
+  searchPlant = plantID => {
+    fetch("https://trefle.io/api/plants/" + plantID, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + "c29CNlpKeENqMUsrbmIvNlhIRExMdz09",
+        "Content-Type": "application/json"
+      }
+    })
+      .then(data => {
+        if (data.status != 200) {
+          this.setState({
+            errorMsg: data._bodyText
+          });
+        }
+        return data.json();
       })
       .then(json => {
-        this.handlePlantList(json)
+        this.handlePlantData(json);
       })
       .catch(error => {
         console.log(error);
+      });
+  };
+
+  searchPlantsAPI = () => {
+    fetch("https://trefle.io/api/plants?q=" + this.state.plantSpeciesQuery, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + "c29CNlpKeENqMUsrbmIvNlhIRExMdz09",
+        "Content-Type": "application/json"
+      }
+    })
+      .then(data => {
+        console.log(data);
+
+        if (data.status != 200) {
+          this.setState({
+            errorMsg: data._bodyText
+          });
+        }
+        return data.json();
       })
-  }
+      .then(json => {
+        this.handlePlantList(json);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   _takePhoto = async () => {
-    const {
-      status: cameraPerm
-    } = await Permissions.askAsync(Permissions.CAMERA);
+    const { status: cameraPerm } = await Permissions.askAsync(
+      Permissions.CAMERA
+    );
 
-    const {
-      status: cameraRollPerm
-    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { status: cameraRollPerm } = await Permissions.askAsync(
+      Permissions.CAMERA_ROLL
+    );
 
     // only if user allows permission to camera AND camera roll
-    if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
+    if (cameraPerm === "granted" && cameraRollPerm === "granted") {
       let pickerResult = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [4, 3]
       });
       this.setState({
         plantPicture: pickerResult.uri
@@ -260,23 +271,13 @@ class AddPlantScreen extends React.Component {
   };
 
   _maybeRenderImage = () => {
-    let {
-      plantPicture
-    } = this.state;
+    let { plantPicture } = this.state;
 
     if (!plantPicture) {
-      return (<Image
-        source={placeholderImage}
-        style={styles.uploadImage}
-      />);
+      return <Image source={placeholderImage} style={styles.uploadImage} />;
     }
 
-    return (
-      <Image
-        source={{ uri: plantPicture }}
-        style={styles.uploadImage}
-      />
-    );
+    return <Image source={{ uri: plantPicture }} style={styles.uploadImage} />;
   };
 
   _handleImagePicked = async pickerResult => {
@@ -290,10 +291,10 @@ class AddPlantScreen extends React.Component {
       if (!pickerResult.cancelled) {
         uploadResponse = await uploadImageAsync(pickerResult.uri);
         uploadResult = await uploadResponse.json();
-        this.setState({plantPicLocation:uploadResult.path})
+        this.setState({ plantPicLocation: uploadResult.path });
       }
     } catch (e) {
-      alert('Upload failed, sorry :(');
+      alert("Upload failed, sorry :(");
     } finally {
       this.setState({
         uploading: false
@@ -305,23 +306,23 @@ class AddPlantScreen extends React.Component {
 async function uploadImageAsync(uri) {
   let apiUrl = "http://" + global.SERVERIP + "/api/uploadPlantImage";
 
-  let uriParts = uri.split('.');
+  let uriParts = uri.split(".");
   let fileType = uriParts[uriParts.length - 1];
 
   let formData = new FormData();
-  formData.append('file',{
+  formData.append("file", {
     uri,
     name: `photo.${fileType}`,
-    type: `image/${fileType}`,
+    type: `image/${fileType}`
   });
 
   let options = {
-    method: 'POST',
+    method: "POST",
     body: formData,
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'multipart/form-data',
-    },
+      Accept: "application/json",
+      "Content-Type": "multipart/form-data"
+    }
   };
   return fetch(apiUrl, options);
 }
@@ -329,7 +330,7 @@ async function uploadImageAsync(uri) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center"
   },
 
   form: {
@@ -347,8 +348,7 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 6,
-
+    shadowRadius: 6
   },
 
   buttonSection: {
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   plant: {
     padding: 5,
     fontSize: 12,
-    height: 49,
+    height: 49
   },
   settingsButton: {
     backgroundColor: colors.GREEN,
@@ -402,8 +402,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     marginVertical: 20,
-    width: 90,
-  },
+    width: 90
+  }
 });
 
 export default AddPlantScreen;

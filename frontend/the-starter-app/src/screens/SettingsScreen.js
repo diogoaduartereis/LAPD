@@ -13,99 +13,99 @@ import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
 import { NavigationActions, StackActions } from "react-navigation";
-import * as Progress from 'react-native-progress';
-
+import * as Progress from "react-native-progress";
 
 class SettingsScreen extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      loading:false,
+      loading: false,
       oldPassword: "",
       newPassword: "",
       confirmNewPassword: "",
       errorMsg: "",
-      succMsg: "",
+      succMsg: ""
     };
   }
 
   secondTextInput = React.createRef();
   thirdTextInput = React.createRef();
 
-  validateLogin(min, max)
-  {
-    if(this.state.confirmNewPassword != this.state.newPassword) {
+  validateLogin(min, max) {
+    if (this.state.confirmNewPassword != this.state.newPassword) {
       this.setState({
-        errorMsg:"The passwords don't match"
-      })
+        errorMsg: "The passwords don't match"
+      });
       return false;
     }
 
-    if(this.state.newPassword.length < min || this.state.newPassword.length > max) {
+    if (
+      this.state.newPassword.length < min ||
+      this.state.newPassword.length > max
+    ) {
       this.setState({
-        errorMsg:"Password must be " + min + " to " + max + " characters long"
-      })
+        errorMsg: "Password must be " + min + " to " + max + " characters long"
+      });
       return false;
-    }
-    else if(!this.state.newPassword.match(/^[a-zA-Z0-9]+$/i)) {
+    } else if (!this.state.newPassword.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
         errorMsg: "Password must be alphanumeric"
-      })
+      });
       return false;
     }
-    return true
+    return true;
   }
 
   handleOldPassword = oldPassword => this.setState({ oldPassword });
   handleNewPassword = newPassword => this.setState({ newPassword });
-  handleConfirmNewPassword = confirmNewPassword => this.setState({ confirmNewPassword });
+  handleConfirmNewPassword = confirmNewPassword =>
+    this.setState({ confirmNewPassword });
 
   fetchAndComparePasswords(username) {
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/comparePW", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           username: username,
           newPassword: this.state.newPassword,
-          oldPassword: this.state.oldPassword,
-        }),
+          oldPassword: this.state.oldPassword
+        })
       })
-      .then(data => {
-        this.setState({ loading:false })
-        if(data.status == 200) {
-          this.setState({
-            succMsg: "Password successfully updated",
-            errorMsg: "",
-            loading: false,
-          })
-          return;
-        }
-        else {
-          this.setState({
-            errorMsg: data._bodyText,
-            succMsg: "",
-            loading: false,
-          })
-          return;
-        }
-      }).catch(error => {
-        this.setState({ loading:false })
-        console.log(error);
-        return error;
-      });
-    }, 3000)
+        .then(data => {
+          this.setState({ loading: false });
+          if (data.status == 200) {
+            this.setState({
+              succMsg: "Password successfully updated",
+              errorMsg: "",
+              loading: false
+            });
+            return;
+          } else {
+            this.setState({
+              errorMsg: data._bodyText,
+              succMsg: "",
+              loading: false
+            });
+            return;
+          }
+        })
+        .catch(error => {
+          this.setState({ loading: false });
+          console.log(error);
+          return error;
+        });
+    }, 3000);
   }
 
-  handlePressChange = () =>{
-    if(!this.validateLogin(5,20)) return;
-    this.setState({ loading:true })
+  handlePressChange = () => {
+    if (!this.validateLogin(5, 20)) return;
+    this.setState({ loading: true });
     this.fetchAndComparePasswords(global.USERNAME);
-  }
+  };
 
   render() {
     const { navigation } = this.props;
@@ -117,7 +117,7 @@ class SettingsScreen extends React.Component {
         <View style={styles.form}>
           <FormTextInput
             ref={input => {
-              this.secondTextInput = input;  
+              this.secondTextInput = input;
             }}
             value={this.state.password}
             onChangeText={this.handleOldPassword}
@@ -125,13 +125,13 @@ class SettingsScreen extends React.Component {
             secureTextEntry={true}
             onSubmitEditing={() => {
               this.thirdTextInput.focus();
-            }} 
+            }}
             returnKeyType="next"
           />
 
           <FormTextInput
             ref={input => {
-              this.secondTextInput = input;  
+              this.secondTextInput = input;
             }}
             value={this.state.password}
             onChangeText={this.handleNewPassword}
@@ -139,13 +139,13 @@ class SettingsScreen extends React.Component {
             secureTextEntry={true}
             onSubmitEditing={() => {
               this.thirdTextInput.focus();
-            }} 
+            }}
             returnKeyType="next"
           />
 
           <FormTextInput
             ref={input => {
-              this.secondTextInput = input;  
+              this.secondTextInput = input;
             }}
             value={this.state.password}
             onChangeText={this.handleConfirmNewPassword}
@@ -153,7 +153,7 @@ class SettingsScreen extends React.Component {
             secureTextEntry={true}
             onSubmitEditing={() => {
               this.thirdTextInput.focus();
-            }} 
+            }}
             returnKeyType="next"
           />
 
@@ -171,15 +171,21 @@ class SettingsScreen extends React.Component {
 
         <View style={styles.buttonLogoutSection}>
           <Button
-          style={styles.buttonLogout}
-          label="Logout"
-          onPress={() => navigation.navigate("Login")}
+            style={styles.buttonLogout}
+            label="Logout"
+            onPress={() => navigation.navigate("Login")}
           />
         </View>
 
-          {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
-
-        </KeyboardAvoidingView>
+        {this.state.loading && (
+          <Progress.CircleSnail
+            style={styles.loading}
+            size={100}
+            thickness={5}
+            color={[colors.BLUE, colors.GREEN2, colors.YELLOW]}
+          />
+        )}
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -193,24 +199,24 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 10
   },
 
   succMsg: {
     color: "green",
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 10
   },
 
-  loading:{
-    position: 'absolute', 
-    top: 0, 
-    left: 0, 
-    right: 0, 
-    bottom: 0, 
-    justifyContent: 'center', 
-    alignItems: 'center'
+  loading: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   bgImage: {
@@ -231,8 +237,7 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 2,
-
+    shadowRadius: 2
   },
 
   buttonLogout: {
@@ -244,10 +249,9 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 2,
-
+    shadowRadius: 2
   },
-  
+
   buttonSection: {
     width: "100%",
     height: "20%",
@@ -262,7 +266,7 @@ const styles = StyleSheet.create({
     height: "20%",
     justifyContent: "center",
     alignItems: "center",
-    opacity: 1,
+    opacity: 1
     //  marginBottom: "5%"
   },
 
@@ -297,34 +301,34 @@ const styles = StyleSheet.create({
 
   FABContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5"
   },
 
   TouchableOpacityStyle: {
-    position: 'absolute',
+    position: "absolute",
     width: 50,
     height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     right: 30,
-    bottom: 30,
+    bottom: 30
   },
 
   FloatingButtonStyle: {
-    resizeMode: 'contain',
+    resizeMode: "contain",
     width: 50,
-    height: 50,
+    height: 50
     //backgroundColor:'black'
-  }, 
+  },
 
   loginButtonSection: {
     width: "100%",
     height: "20%",
     justifyContent: "center",
     alignItems: "center"
-  }, 
+  },
 
   loginButton: {
     backgroundColor: colors.GREEN2,
@@ -335,9 +339,8 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.5,
-    shadowRadius: 2,
-
-  },
+    shadowRadius: 2
+  }
 });
 
 export default SettingsScreen;

@@ -11,7 +11,7 @@ import TipsScreen from "./src/screens/TipsScreen";
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-global.SERVERIP = '192.168.1.3:3001';
+global.SERVERIP = "192.168.1.3:3001";
 
 const AppNavigator = createStackNavigator(
   {
@@ -31,7 +31,6 @@ const AppNavigator = createStackNavigator(
         headerStyle: {
           backgroundColor: colors.GREEN2
         }
-
       }
     },
     Register: {
@@ -71,35 +70,34 @@ const AppNavigator = createStackNavigator(
           backgroundColor: colors.GREEN2
         }
       }
-
     },
 
-  Settings: {
-    screen: SettingsScreen,
-    navigationOptions: {
-      headerTintColor: "black",
-      title: "Settings",
-      //headerTitleStyle: { flex: 1, textAlign: "center" },
-      headerTintColor: "white",
-      headerStyle: {
-        backgroundColor: colors.GREEN2
+    Settings: {
+      screen: SettingsScreen,
+      navigationOptions: {
+        headerTintColor: "black",
+        title: "Settings",
+        //headerTitleStyle: { flex: 1, textAlign: "center" },
+        headerTintColor: "white",
+        headerStyle: {
+          backgroundColor: colors.GREEN2
+        }
+      }
+    },
+
+    Tips: {
+      screen: TipsScreen,
+      navigationOptions: {
+        headerTintColor: "black",
+        title: "Tips",
+        //headerTitleStyle: { flex: 1, textAlign: "center" },
+        headerTintColor: "white",
+        headerStyle: {
+          backgroundColor: colors.GREEN2
+        }
       }
     }
   },
-
-  Tips: {
-    screen: TipsScreen,
-    navigationOptions: {
-      headerTintColor: "black",
-      title: "Tips",
-      //headerTitleStyle: { flex: 1, textAlign: "center" },
-      headerTintColor: "white",
-      headerStyle: {
-        backgroundColor: colors.GREEN2
-      }
-    }
-  }
-}  ,
 
   {
     initialRouteName: "Login"

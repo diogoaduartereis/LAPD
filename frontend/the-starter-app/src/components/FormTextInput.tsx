@@ -14,7 +14,6 @@ class FormTextInput extends React.Component<Props> {
     }
   };
 
-
   render() {
     const { style, ...otherProps } = this.props;
     return (
@@ -57,8 +56,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
-   
   }
 });
 

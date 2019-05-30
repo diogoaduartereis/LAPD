@@ -13,18 +13,17 @@ import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
 import { NavigationActions, StackActions } from "react-navigation";
-import * as Progress from 'react-native-progress';
-
+import * as Progress from "react-native-progress";
 
 class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading:false,
+      loading: false,
       username: "",
       password: "",
       confirmPassword: "",
-      errorMsg: "",
+      errorMsg: ""
     };
   }
 
@@ -38,86 +37,83 @@ class RegisterScreen extends React.Component {
   secondTextInput = React.createRef();
   thirdTextInput = React.createRef();
 
-  validateLogin(min, max)
-  {
-    if(this.state.username.length < min || this.state.username.length > max) {
+  validateLogin(min, max) {
+    if (this.state.username.length < min || this.state.username.length > max) {
       this.setState({
         errorMsg: "Username must be " + min + " to " + max + " characters long"
       });
       return false;
-    }
-    else if(!this.state.username.match(/^[a-zA-Z0-9]+$/i)) {
+    } else if (!this.state.username.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
         errorMsg: "Username must be alphanumeric"
-      })
+      });
       return false;
     }
 
-    if(this.state.confirmPassword != this.state.password) {
+    if (this.state.confirmPassword != this.state.password) {
       this.setState({
-        errorMsg:"The passwords don't match"
-      })
+        errorMsg: "The passwords don't match"
+      });
       return false;
     }
 
-    if(this.state.password.length < min || this.state.password.length > max) {
+    if (this.state.password.length < min || this.state.password.length > max) {
       this.setState({
-        errorMsg:"Password must be " + min + " to " + max + " characters long"
-      })
+        errorMsg: "Password must be " + min + " to " + max + " characters long"
+      });
       return false;
-    }
-    else if(!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
+    } else if (!this.state.password.match(/^[a-zA-Z0-9]+$/i)) {
       this.setState({
         errorMsg: "Password must be alphanumeric"
-      })
+      });
       return false;
     }
-    return true
+    return true;
   }
 
   handleUsernameChange = username => this.setState({ username });
   handlePasswordChange = password => this.setState({ password });
-  handlePasswordConfirmChange = confirmPassword => this.setState({ confirmPassword });
+  handlePasswordConfirmChange = confirmPassword =>
+    this.setState({ confirmPassword });
   handleRegisterPress = () => {
+    if (!this.validateLogin(5, 20)) return;
 
-    if(!this.validateLogin(5,20)) return;
-    
-    this.setState({ loading:true, errorMsg:"" })
+    this.setState({ loading: true, errorMsg: "" });
 
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/register", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           username: this.state.username,
-          password: this.state.password,
-        }),
+          password: this.state.password
+        })
       })
-      .then(data => {
-        
-        this.setState({ loading:false })
+        .then(data => {
+          this.setState({ loading: false });
 
-        if(data.status == 200) {
-          this.props.navigation.dispatch(
-            StackActions.reset({
-              index: 0,
-              actions: [
-                NavigationActions.navigate({
-                  routeName: "Home",
-                  params: { username: this.state.username }
-                })
-              ]
-            })
-          );
-        }
-      }).catch(error => {
-        this.setState({ loading:false })
-        console.log(error);
-      });
-    }, 3000)
+          if (data.status == 200) {
+            this.props.navigation.dispatch(
+              StackActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: "Home",
+                    params: { username: this.state.username }
+                  })
+                ]
+              })
+            );
+          }
+        })
+        .catch(error => {
+          this.setState({ loading: false });
+          console.log(error);
+        });
+    }, 3000);
   };
 
   render() {
@@ -139,7 +135,7 @@ class RegisterScreen extends React.Component {
 
           <FormTextInput
             ref={input => {
-              this.secondTextInput = input;  
+              this.secondTextInput = input;
             }}
             value={this.state.password}
             onChangeText={this.handlePasswordChange}
@@ -147,7 +143,7 @@ class RegisterScreen extends React.Component {
             secureTextEntry={true}
             onSubmitEditing={() => {
               this.thirdTextInput.focus();
-            }} 
+            }}
             returnKeyType="next"
           />
 
@@ -177,8 +173,14 @@ class RegisterScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-        {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
- 
+        {this.state.loading && (
+          <Progress.CircleSnail
+            style={styles.loading}
+            size={100}
+            thickness={5}
+            color={[colors.BLUE, colors.GREEN2, colors.YELLOW]}
+          />
+        )}
       </KeyboardAvoidingView>
     );
   }
@@ -190,14 +192,14 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
 
-  loading:{
-    position: 'absolute', 
-    top: 0, 
-    left: 0, 
-    right: 0, 
-    bottom: 0, 
-    justifyContent: 'center', 
-    alignItems: 'center'
+  loading: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   loginButtonSection: {
@@ -262,14 +264,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center"
-  }, 
+  },
 
   errorMsg: {
     color: "red",
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 10,
-  },   
+    marginBottom: 10
+  }
 });
 
 export default RegisterScreen;

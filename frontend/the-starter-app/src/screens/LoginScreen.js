@@ -14,17 +14,17 @@ import imageLogo from "../assets/images/logo6.png";
 import imageBackground from "../assets/images/background4.png";
 import colors from "../config/colors";
 import strings from "../config/strings";
-import * as Progress from 'react-native-progress';
+import * as Progress from "react-native-progress";
 
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading:false,
+      loading: false,
       username: "",
       password: "",
       errorMsg: "",
-      showLoading: false,
+      showLoading: false
     };
   }
 
@@ -40,53 +40,52 @@ class LoginScreen extends React.Component {
   };
 
   handleLoginPress = () => {
-    
-    this.setState({ loading:true, errorMsg:"" })
+    this.setState({ loading: true, errorMsg: "" });
 
     setTimeout(() => {
       fetch("http://" + global.SERVERIP + "/api/login", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           username: this.state.username,
-          password: this.state.password,
-        }),
+          password: this.state.password
+        })
       })
-      .then(data => {
+        .then(data => {
+          this.setState({ loading: false });
 
-        this.setState({ loading:false })
-
-        if(data.status != 200) {
-          this.setState({
-            errorMsg: data._bodyText,
-            showLoading: false,
-          })
-        }
-        else {
-          this.setState({
-            showLoading: false,
-          })
-          this.props.navigation.dispatch(
-            StackActions.reset({
-              index: 0,
-              actions: [
-                NavigationActions.navigate({
-                  routeName: "Home",
-                  params: { username: this.state.username },
-                })
-              ]
-            })
-          );
-        }}).catch(error => {
+          if (data.status != 200) {
             this.setState({
-              showLoading: false,
-            })
-            console.log(error);
+              errorMsg: data._bodyText,
+              showLoading: false
+            });
+          } else {
+            this.setState({
+              showLoading: false
+            });
+            this.props.navigation.dispatch(
+              StackActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: "Home",
+                    params: { username: this.state.username }
+                  })
+                ]
+              })
+            );
+          }
+        })
+        .catch(error => {
+          this.setState({
+            showLoading: false
           });
-        }, 3000)
+          console.log(error);
+        });
+    }, 3000);
   };
 
   render() {
@@ -131,9 +130,14 @@ class LoginScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-        {this.state.loading && <Progress.CircleSnail style={styles.loading} size={100} thickness={5} color={[colors.BLUE, colors.GREEN2, colors.YELLOW]} />}
- 
-
+        {this.state.loading && (
+          <Progress.CircleSnail
+            style={styles.loading}
+            size={100}
+            thickness={5}
+            color={[colors.BLUE, colors.GREEN2, colors.YELLOW]}
+          />
+        )}
       </KeyboardAvoidingView>
     );
   }
@@ -145,14 +149,14 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
 
-  loading:{
-    position: 'absolute', 
-    top: 0, 
-    left: 0, 
-    right: 0, 
-    bottom: 0, 
-    justifyContent: 'center', 
-    alignItems: 'center'
+  loading: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   loginButtonSection: {
@@ -216,14 +220,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center"
-  }, 
+  },
 
   errorMsg: {
     color: "red",
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 10,
-  }, 
+    marginBottom: 10
+  }
 });
 
 export default LoginScreen;
