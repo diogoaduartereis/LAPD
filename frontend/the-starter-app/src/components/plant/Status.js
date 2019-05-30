@@ -115,13 +115,13 @@ class Status extends React.Component {
             </View>
           )}
 
-          {this.state.global != "ok" ? (
+           
             <Button
               style={styles.waterButton}
               label="WATER THE PLANT"
               onPress={this.handleWaterPress}
             />
-          ) : null}
+           
 
           {this.state.loading && (
             <Progress.CircleSnail
