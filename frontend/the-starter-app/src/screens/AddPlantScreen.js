@@ -4,7 +4,9 @@ import {
   Image,
   StyleSheet,
   View,
-  TouchableOpacity
+  TouchableOpacity, 
+  FlatList,
+  Text
 } from "react-native";
 import Button from "../components/Button";
 import FormTextInput from "../components/FormTextInput";
@@ -20,14 +22,42 @@ class AddPlantScreen extends React.Component {
     super(props);
     this.state = {
       plantName: "",
+      plantMinTemperature:0,
+      plantShadeTolerance:"",
+      plantPrecipitationMax:0,
+      plantPrecipitationMin:0,
       plantSpecies: "",
+      plantSpeciesQuery: "",
+      plantCommonName:"",
       plantPicture: null,
       uploading: false,
+      plantList: [],
     };
   }
 
   handlePlantNameChange = plantName => this.setState({ plantName });
-  handlePlantSpeciesChange = plantSpecies => this.setState({ plantSpecies });
+  handlePlantSpeciesChange = plantSpeciesQuery => this.setState({ plantSpeciesQuery });
+  handlePlantList = plantList => this.setState({plantList});
+  handlePlantData = plantData => {
+    const {temperature_minimum, shade_tolerance, precipitation_minimum, precipitation_maximum} = plantData.main_species.growth
+    let temperature_minimum_deg = null
+    let precipitation_maximum_val = null
+    let precipitation_minimum_val = null
+    if(temperature_minimum)
+      temperature_minimum_deg = temperature_minimum.deg_c
+    if(precipitation_maximum)
+      precipitation_maximum_val = precipitation_maximum.cm
+    if(precipitation_minimum)
+      precipitation_minimum_val = precipitation_minimum.cm
+    this.setState({
+      plantMinTemperature:temperature_minimum_deg,
+      plantShadeTolerance:shade_tolerance,
+      plantPrecipitationMax:precipitation_maximum_val,
+      plantPrecipitationMin:precipitation_minimum_val,
+      plantCommonName:plantData.common_name,
+      plantSpecies:plantData.scientific_name
+    })
+  }
 
   render() {
     let {
@@ -51,11 +81,9 @@ class AddPlantScreen extends React.Component {
           />
 
           <FormTextInput
-            ref={this.passwordInputRef}
-            value={this.state.plantSpecies}
+            value={this.state.plantSpeciesQuery}
             onChangeText={this.handlePlantSpeciesChange}
             placeholder="Plant species"
-            secureTextEntry
             returnKeyType="done"
           />
           <Button
@@ -71,7 +99,19 @@ class AddPlantScreen extends React.Component {
             label="Search species"
             onPress={this.searchPlantsAPI}
           />
-
+          <View>
+           
+            <FlatList
+              style = {styles.plantListContainer}
+              data={this.state.plantList}
+              renderItem={({item,i}) => (
+              <TouchableOpacity key={i} onPress={()=>this.searchPlant(item.id)} >
+                <Text style={styles.plant} >{item.common_name ? item.common_name + " - " + item.scientific_name : item.scientific_name}</Text>
+              </TouchableOpacity>
+              )}
+              />
+  
+          </View>
 
 
           <View style={styles.buttonSection}>
@@ -85,43 +125,80 @@ class AddPlantScreen extends React.Component {
       </KeyboardAvoidingView>
     );
   }
+  handleAddPress = () => {
+    fetch("http://" + global.SERVERIP + "/api/addPlant", {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username:global.USERNAME ? global.USERNAME : "admin",
+        name:this.state.plantName,
+        species:this.state.plantSpecies,
+        plantPrecipitationMax:this.state.plantPrecipitationMax,
+        plantPrecipitationMin:this.state.plantPrecipitationMin,
+        plantShadeTolerance:this.state.plantShadeTolerance,
+        plantMinTemperature:this.state.plantMinTemperature
+      }),
+    })
+    .then(data => {
+      if(data.status != 200) {
+        this.setState({
+          errorMsg: data._bodyText,
+        })
+      }
+      return data.text()
+    })
+    .then(res => console.log(res))
+  }
 
-  searchPlantsAPI = async () => {
-    setTimeout(() => {
-      fetch("https://trefle.io//api/plants", {
+  searchPlant = (plantID) => {
+    fetch("https://trefle.io/api/plants/"+plantID, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer '+ 'TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09', 
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(data => {
+      if(data.status != 200) {
+        this.setState({
+          errorMsg: data._bodyText
+        })
+      }
+      return data.json()
+    })
+    .then(json => {
+      this.handlePlantData(json)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+
+  searchPlantsAPI = () => {
+      fetch("https://trefle.io/api/plants?q="+this.state.plantSpecies, {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer '+ TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09, 
+          'Authorization': 'Bearer '+ 'TVN0UVB5Vml3TitoL0JMRUdUVFQ5QT09', 
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: this.state.username,
-          password: this.state.password,
-        }),
+        }
       })
       .then(data => {
-        console.log(data);
         if(data.status != 200) {
           this.setState({
             errorMsg: data._bodyText
           })
         }
-        else {
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: "Home",
-                    params: { username: this.state.username },
-                  })
-                ]
-              })
-            );
-        }}).catch(error => {
-            console.log(error);
-          });
-        }, 3000)
+        return data.json()
+      })
+      .then(json => {
+        this.handlePlantList(json)
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 
   _takePhoto = async () => {
@@ -242,7 +319,7 @@ const styles = StyleSheet.create({
   },
 
   form: {
-    flex: 5,
+    flex: 2,
     justifyContent: "center",
     width: "80%"
   },
@@ -263,7 +340,7 @@ const styles = StyleSheet.create({
 
   buttonSection: {
     width: "100%",
-    height: "20%",
+    height: "10%",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -289,6 +366,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     height: 44,
     textAlignVertical: "center"
+  },
+
+  plantListContainer: {
+    height: "30%",
+    paddingTop: 22,
+    marginBottom: 22
+  },
+
+  plant: {
+    padding: 5,
+    fontSize: 12,
+    height: 49,
   },
 });
 

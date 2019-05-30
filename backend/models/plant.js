@@ -22,12 +22,21 @@ const Plant = mongoose.model('Plant', new Schema({
     photoPath: {
         type: String,
     }, 
-    idealTemp: {
+    plantCommonName:{
+        type:String,
+    },
+    plantMinTemperature: {
         type: Number,
     },
-    idealHumid: {
+    plantShadeTolerance: {
+        type: String,
+    },
+    plantPrecipitationMax: {
         type: Number,
     },
+    plantPrecipitationMin: {
+        type: Number,
+    }
 }));
 
 exports.Plant = Plant;
