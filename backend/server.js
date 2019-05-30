@@ -23,7 +23,6 @@ const dataModel = require("./models");
 const Data = dataModel.models.Data    //model for htu21d
 const { User, validate } = require('./models/user'); //model for the Users
 const { Plant } = require('./models/plant'); //model for the Plants
-import {PythonShell} from 'python-shell';
 
 
 /**
@@ -219,11 +218,13 @@ function runPumpScript(plant) {
  * Receive get to activate pump
  */
 router.get('/activatePump', async (req, res) => {
-  if (plant) {
-    runPumpScript(plant);
-  } else {
-      return res.status(400).send('Invalid Plant');
-  }
+    // using spawn instead of exec, prefer a stream over a buffer
+    // to avoid maxBuffer issue
+    var spawn = require('child_process').spawn;
+    var process = spawn('python', ['./scripts/pump.py']);
+  process.stdout.on('data', function (data) {
+    console.log(data);
+  });
 });
 
 // Development Testing Routes
