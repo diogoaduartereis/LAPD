@@ -143,8 +143,8 @@ class HomeScreen extends React.Component {
     if(uripath.includes("backend/uploads")){
       let parts = uripath.split("/")
       if(!parts[parts.length-1].includes("jpg"))
-        return global.SERVERIP+"/"+parts[parts.length-1]+".jpg"
-      else return global.SERVERIP+"/"+parts[parts.length-1]
+        return "http://"+global.SERVERIP+"/"+parts[parts.length-1]+".jpg"
+      return "http://"+global.SERVERIP+"/"+parts[parts.length-1]
     }
     return uripath
   }
