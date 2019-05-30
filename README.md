@@ -1,29 +1,42 @@
 # LAPD
 
 
-***Instructions for installation and use***
+**Instructions for installation and use**
 
 In the source folder, there are different folders for the frontend and backend of our project.
 
-**1) Frontend**
+*1) Frontend*
 
 On the first run, in the frontend folder, you must install the dependencies:
+
+```shell
 $ npm install
+```
 
 To run the app:
+
+```shell
 $ npm start
+```
 
 The expo tool will be started, and the project can be scanned with the provided QR code in a mobile phone.
 It is also possible to run on an Android or iOS simulator.
 
 
-**2) Backend**
+*2) Backend*
 
 On the first run, in the backend folder, you must install the dependencies:
+
+```shell
 $ npm install
+```
+
 
 To start the server:
+
+```shell
 $ node server.js
+```
 
 
 Notes:
